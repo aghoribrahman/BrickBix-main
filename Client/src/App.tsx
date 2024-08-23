@@ -87,7 +87,7 @@ function App() {
 
       if (profileObj) {
         const response = await fetch(
-            "https://refine-dashboard-3gx3.onrender.com/api/v1/users",
+            "http://localhost:8080/api/v1/users",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -196,7 +196,7 @@ function App() {
              
               <Refine
                 
-                dataProvider={dataProvider("https://refine-dashboard-3gx3.onrender.com/api/v1")}
+                dataProvider={dataProvider("http://localhost:8080api/v1")}
                 notificationProvider={notificationProvider}
                 routerProvider={routerProvider}
                 authProvider={authProvider}

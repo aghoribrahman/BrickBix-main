@@ -27,8 +27,8 @@ const Home = () => {
   useEffect(() => {
     const fetchProperties = async () => {
         try {
-            const response = await fetch("https://refine-dashboard-3gx3.onrender.com/api/v1/properties/five");
-            const responseRequirement = await fetch("https://refine-dashboard-3gx3.onrender.com/api/v1/requirement/five");
+            const response = await fetch("http://localhost:8080/api/v1/properties/five");
+            const responseRequirement = await fetch("http://localhost:8080/api/v1/requirement/five");
             if (!response.ok || !responseRequirement.ok) {
                 throw new Error("Failed to fetch properties");
             }

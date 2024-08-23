@@ -30,7 +30,7 @@ const PropertyDetails = () => {
   useEffect(() => {
     const fetchPropertyDetails = async () => {
       try {
-        const endpoint = `https://refine-dashboard-3gx3.onrender.com/api/v1/properties/${id}`;
+        const endpoint = `http://localhost:8080/api/v1/properties/${id}`;
         const response = await axios.get(endpoint);
         if ('requirements' in response.data) {
           setPropertyInfo(response.data.requirements);

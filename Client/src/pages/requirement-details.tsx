@@ -35,7 +35,7 @@ const RequirementDetails = () => {
     const fetchPropertyDetails = async () => {
       try {
         // Construct the API endpoint URL based on the id parameter
-        const endpoint = `https://refine-dashboard-3gx3.onrender.com/api/v1/requirement/${id}`;
+        const endpoint = `http://localhost:8080/api/v1/requirement/${id}`;
         
         // Make the API call
         const response = await axios.get(endpoint);
