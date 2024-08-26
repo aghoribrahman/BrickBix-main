@@ -47,7 +47,7 @@ const Home = () => {
     
   console.log(myProperties);
   console.log(requirements);
-const commercialProperties = myProperties.filter(property => property.propertyType === 'Commercial');
+const commercialProperties = myProperties.filter(property => property.propertyType === 'commercial');
 
 const apartmentProperties = myProperties.filter(property => property.propertyType === 'apartment');
 

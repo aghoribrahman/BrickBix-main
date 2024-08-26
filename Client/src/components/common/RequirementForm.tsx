@@ -117,17 +117,19 @@ const RequirementForm = ({
                 defaultValue="apartment"
                 {...register("propertyType", {
                   required: true,
+                  setValueAs: (value: string) => value.toLowerCase(), // Type defined as string
                 })}
               >
                 <MenuItem value="apartment">Apartment</MenuItem>
-                <MenuItem value="Rental">Rental</MenuItem>
-                <MenuItem value="Commercial">Commercial</MenuItem>
+                <MenuItem value="rental">Rental</MenuItem>
+                <MenuItem value="commercial">Commercial</MenuItem>
                 <MenuItem value="farmhouse">Farmhouse</MenuItem>
-                <MenuItem value="Duplex">Duplex</MenuItem>
-                <MenuItem value="Plot">Plot</MenuItem>
-                <MenuItem value="Land">Land</MenuItem>
-                <MenuItem value="Room">Room</MenuItem>
+                <MenuItem value="duplex">Duplex</MenuItem>
+                <MenuItem value="plot">Plot</MenuItem>
+                <MenuItem value="land">Land</MenuItem>
+                <MenuItem value="room">Room</MenuItem>
               </Select>
+
             </FormControl>
 
             <FormControl sx={{ flex: 1 }}>
@@ -147,7 +149,7 @@ const RequirementForm = ({
                 displayEmpty
                 required
                 inputProps={{ "aria-label": "Without label" }}
-                defaultValue="apartment"
+                defaultValue="Direct"
                 {...register("dealType", {
                   required: true,
                 })}
@@ -181,29 +183,42 @@ const RequirementForm = ({
           </Stack>
 
           <FormControl>
-            <FormHelperText
-              sx={{
-                fontWeight: 500,
-                margin: "10px 0",
-                fontSize: 16,
-                color: "#11142d",
-              }}
-            >
-              Enter Phone Number
-            </FormHelperText>
-            <TextField
-              fullWidth
-              required
-              id="outlined-basic"
-              color="info"
-              type="tel" // Change to 'tel' for mobile keyboard
-              variant="outlined"
-              inputProps={{
-                pattern: "[0-9]{10}",
-                title: "Please enter a valid 10-digit mobile number",
-              }}
-              {...register("phone", { required: true, pattern: /[0-9]{10}/ })}
-            />
+          <FormHelperText
+            sx={{
+              fontWeight: 500,
+              margin: "10px 0",
+              fontSize: 16,
+              color: "#11142d",
+            }}
+          >
+            Enter Phone Number
+          </FormHelperText>
+              <Box display="flex" alignItems="center">
+                <TextField
+                  value="+91"
+                  disabled
+                  sx={{
+                    maxWidth: "70px",
+                    "& .MuiInputBase-root": {
+                      backgroundColor: "#f0f0f0",
+                    },
+                  }}
+                />
+                <TextField
+                  fullWidth
+                  required
+                  id="outlined-basic"
+                  color="info"
+                  type="tel"
+                  variant="outlined"
+                  inputProps={{
+                    pattern: "[0-9]{10}",
+                    title: "Please enter a valid 10-digit mobile number",
+                  }}
+                  sx={{ marginLeft: "10px" }}
+                  {...register("phone", { required: true, pattern: /[0-9]{10}/ })}
+                />
+              </Box>
           </FormControl>
 
           <FormControl>

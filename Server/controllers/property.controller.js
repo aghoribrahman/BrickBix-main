@@ -20,7 +20,6 @@ const getAllProperties = async (req, res) => {
     _sort,
     title_like = "",
     propertyType = "",
-    location_like = "",
   } = req.query;
 
   const query = {};
@@ -30,7 +29,11 @@ const getAllProperties = async (req, res) => {
   }
 
   if (title_like) {
-    query.title = { $regex: title_like, $options: "i" };
+    const regex = new RegExp(title_like, 'i'); // Create a regex for case-insensitive search
+    query.$or = [
+      { title: regex },
+      { location: regex }
+    ];
   }
 
   try {
@@ -66,8 +69,18 @@ const getPropertyDetail = async (req, res) => {
 
 const createProperty = async (req, res) => {
   try {
-    const { title, description, propertyType, dealType, location, price, phone, photo, email } =
-      req.body;
+    const {
+      title,
+      description,
+      propertyType,
+      dealType,
+      location,
+      price,
+      phone,
+      photo,
+      email,
+      totalSquareFeet,
+    } = req.body;
 
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -85,6 +98,7 @@ const createProperty = async (req, res) => {
       dealType,
       location,
       price,
+      totalSquareFeet, // Adding the new field
       phone,
       photo: photoUrl.url,
       creator: user._id,
@@ -101,13 +115,23 @@ const createProperty = async (req, res) => {
   }
 };
 
+
 const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, propertyType, dealType, location, price, phone, photo } =
-      req.body;
+    const {
+      title,
+      description,
+      propertyType,
+      dealType,
+      location,
+      price,
+      phone,
+      photo,
+      totalSquareFeet,
+    } = req.body;
 
-    const photoUrl = await cloudinary.uploader.upload(photo);
+    const photoUrl = photo ? await cloudinary.uploader.upload(photo) : null;
 
     await Property.findByIdAndUpdate(
       { _id: id },
@@ -119,8 +143,9 @@ const updateProperty = async (req, res) => {
         phone,
         location,
         price,
-        photo: photoUrl.url || photo,
-      },
+        photo: photoUrl?.url || photo,
+        totalSquareFeet, // Adding the new field
+      }
     );
 
     res.status(200).json({ message: "Property updated successfully" });
@@ -128,6 +153,7 @@ const updateProperty = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const deleteProperty = async (req, res) => {
   try {

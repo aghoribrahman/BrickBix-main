@@ -28,12 +28,7 @@ const Form = ({
   const theme = useTheme();
 
   const handleClick = () => {
-    // Update state to disable the button
     setIsButtonDisabled(true);
-
-    // Perform your desired action here
-    // For example, make an API call, perform validation, etc.
-    // Once the action is completed, you can re-enable the button if needed
   };
 
   return (
@@ -76,6 +71,7 @@ const Form = ({
               {...register("title", { required: true })}
             />
           </FormControl>
+
           <FormControl>
             <FormHelperText
               sx={{
@@ -117,7 +113,7 @@ const Form = ({
               >
                 Select Property Type
               </FormHelperText>
-              <Select
+               <Select
                 variant="outlined"
                 color="info"
                 displayEmpty
@@ -126,16 +122,17 @@ const Form = ({
                 defaultValue="apartment"
                 {...register("propertyType", {
                   required: true,
+                  setValueAs: (value: string) => value.toLowerCase(), // Convert to lowercase
                 })}
               >
                 <MenuItem value="apartment">Apartment</MenuItem>
-                <MenuItem value="Rental">Rental</MenuItem>
-                <MenuItem value="Commercial">Commercial</MenuItem>
+                <MenuItem value="rental">Rental</MenuItem>
+                <MenuItem value="commercial">Commercial</MenuItem>
                 <MenuItem value="farmhouse">Farmhouse</MenuItem>
-                <MenuItem value="Duplex">Duplex</MenuItem>
-                <MenuItem value="Plot">Plot</MenuItem>
-                <MenuItem value="Land">Land</MenuItem>
-                <MenuItem value="Room">Room</MenuItem>
+                <MenuItem value="duplex">Duplex</MenuItem>
+                <MenuItem value="plot">Plot</MenuItem>
+                <MenuItem value="land">Land</MenuItem>
+                <MenuItem value="room">Room</MenuItem>
               </Select>
             </FormControl>
 
@@ -156,7 +153,7 @@ const Form = ({
                 displayEmpty
                 required
                 inputProps={{ "aria-label": "Without label" }}
-                defaultValue="apartment"
+                defaultValue="Direct"
                 {...register("dealType", {
                   required: true,
                 })}
@@ -165,8 +162,10 @@ const Form = ({
                 <MenuItem value="Indirect">Indirect</MenuItem>
               </Select>
             </FormControl>
+          </Stack>
 
-            <FormControl>
+          <Stack direction={{ xs: "column", sm: "row" }} gap={4}>
+            <FormControl sx={{ flex: 1 }}>
               <FormHelperText
                 sx={{
                   fontWeight: 500,
@@ -187,19 +186,52 @@ const Form = ({
                 {...register("price", { required: true })}
               />
             </FormControl>
+
+            <FormControl sx={{ flex: 1 }}>
+              <FormHelperText
+                sx={{
+                  fontWeight: 500,
+                  margin: "10px 0",
+                  fontSize: 16,
+                  color: "#11142d",
+                }}
+              >
+                Enter Total Square Feet
+              </FormHelperText>
+              <TextField
+                fullWidth
+                required
+                id="outlined-basic"
+                color="info"
+                type="number"
+                variant="outlined"
+                {...register("totalSquareFeet", { required: true })}
+              />
+            </FormControl>
           </Stack>
 
           <FormControl>
-            <FormHelperText
+          <FormHelperText
+            sx={{
+              fontWeight: 500,
+              margin: "10px 0",
+              fontSize: 16,
+              color: "#11142d",
+            }}
+          >
+            Enter Phone Number
+          </FormHelperText>
+          <Box display="flex" alignItems="center">
+            <TextField
+              value="+91"
+              disabled
               sx={{
-                fontWeight: 500,
-                margin: "10px 0",
-                fontSize: 16,
-                color: "#11142d",
+                maxWidth: "70px",
+                "& .MuiInputBase-root": {
+                  backgroundColor: "#f0f0f0",
+                },
               }}
-            >
-              Enter Phone Number
-            </FormHelperText>
+            />
             <TextField
               fullWidth
               required
@@ -211,8 +243,13 @@ const Form = ({
                 pattern: "[0-9]{10}",
                 title: "Please enter a valid 10-digit mobile number",
               }}
+              sx={{ marginLeft: "10px" }}
               {...register("phone", { required: true, pattern: /[0-9]{10}/ })}
             />
+            </Box>
+          </FormControl>
+
+          <FormControl>
             <FormHelperText
               sx={{
                 fontWeight: 500,

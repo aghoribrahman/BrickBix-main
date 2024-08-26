@@ -12,7 +12,6 @@ import Star from "@mui/icons-material/Star";
 import CustomButton from "../components/common/CustomButton";
 import { useDelete, useGetIdentity } from "@refinedev/core";
 import axios from "axios";
-import BrickBix from "../assets/brick bix image.jpg";
 
 function checkImage(url: string) {
   const img = new Image();
@@ -32,142 +31,122 @@ const PropertyDetails = () => {
       try {
         const endpoint = `http://localhost:8080/api/v1/properties/${id}`;
         const response = await axios.get(endpoint);
-        if ('requirements' in response.data) {
-          setPropertyInfo(response.data.requirements);
-        } else {
-          setPropertyInfo(response.data);
-        }
+        setPropertyInfo(response.data);
       } catch (error) {
         console.error("Error fetching property details:", error);
       }
     };
-  
     fetchPropertyDetails();
   }, [id]);
-  
 
   if (!propertyInfo) {
     return <div>Loading...</div>;
   }
-
-  const isCurrentUser = // @ts-ignore
-   user?.email === propertyInfo?.creator?.email;
+  //@ts-ignore
+  const isCurrentUser = user?.email === propertyInfo?.creator?.email;
 
   const handleDeleteProperty = () => {
     const response = window.confirm("Are you sure you want to delete this property?");
     if (response) {
       mutate(
-        {
-          resource: "properties",
-          // @ts-ignore
-          id: id,
-        },
-        {
-          onSuccess: () => {
-            navigate("/allProperties");
-          },
-        }
+        //@ts-ignore
+        { resource: "properties", id: id },
+        { onSuccess: () => navigate("/allProperties") }
       );
     }
   };
-
+  console.log(propertyInfo.title)
+  console.log(propertyInfo.totalSquareFeet)
   return (
-    <Box borderRadius="15px" padding="20px" bgcolor="#FCFCFC" width="fit-content">
-      <Typography fontSize={25} fontWeight={700} color="#11142D">
-        Details
+    <Box padding={{ xs: "10px", sm: "20px" }} bgcolor="#FCFCFC" borderRadius="15px" width="100%">
+      <Typography fontSize={25} fontWeight={700} color="#11142D" textAlign="center" mb={3}>
+        Property Details
       </Typography>
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} lg={6}>
-          <Box maxWidth={764}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Box>
             <img
-              src={// @ts-ignore
-                propertyInfo.photo}
+            //@ts-ignore
+              src={propertyInfo.photo}
               alt="property_details-img"
-              style={{ borderRadius: "10px", width: "100%", maxHeight: "330px" }}
-              className="property_details-img"
+              style={{ borderRadius: "10px", width: "100%", maxHeight: "330px", objectFit: "cover" }}
             />
-
-            <Box mt="15px">
-              <Stack direction="row" justifyContent="space-between" flexWrap="wrap" alignItems="center">
+            <Box mt={2}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography fontSize={18} fontWeight={500} color="#11142D" textTransform="capitalize">
-                  {// @ts-ignore
+                  {
+                  //@ts-ignore
                   propertyInfo.propertyType}
                 </Typography>
                 <Box>
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <Star key={`star-${item}`} sx={{ color: "#F2C94C" }} />
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={`star-${i}`} sx={{ color: "#F2C94C" }} />
                   ))}
                 </Box>
               </Stack>
 
-              <Stack
-                direction="row"
-                flexWrap="wrap"
-                justifyContent="space-between"
-                alignItems="center"
-                gap={2}
-              >
+              <Stack direction="row" justifyContent="space-between" alignItems="center" mt={2}>
                 <Box>
-                  <Typography fontSize={22} fontWeight={600} mt="10px" color="#11142D">
-                    {// @ts-ignore
+                  <Typography fontSize={22} fontWeight={600} color="#11142D">
+                    {//@ts-ignore
                     propertyInfo.title}
                   </Typography>
-                  <Stack mt={0.5} direction="row" alignItems="center" gap={0.5}>
+                  <Stack direction="row" alignItems="center" gap={1} mt={0.5}>
                     <Place sx={{ color: "#808191" }} />
                     <Typography fontSize={14} color="#808191">
-                      {// @ts-ignore
+                      {//@ts-ignore
                       propertyInfo.location}
                     </Typography>
                   </Stack>
                 </Box>
 
                 <Box display="flex" flexDirection="column" alignItems="center">
-                  <Typography fontSize={16} fontWeight={600} mt="10px" color="#11142D">
+                  <Typography fontSize={16} fontWeight={600} color="#11142D">
                     Total Price
                   </Typography>
                   <Typography fontSize={14} fontWeight={600} color="#475be8">
-                    ₹ {new Intl.NumberFormat('en-IN').format(parseFloat(// @ts-ignore
+                    ₹ {new Intl.NumberFormat('en-IN').format(parseFloat(//@ts-ignore
                     propertyInfo.price))}/-
                   </Typography>
                 </Box>
               </Stack>
 
-              <Stack mt="25px" direction="column" gap="10px">
-                <Typography fontSize={18} color="#11142D">
-                  Description
-                </Typography>
-                <Typography fontSize={14} color="#808191">
-                  {// @ts-ignore
-                  propertyInfo.description}
-                </Typography>
-              </Stack>
-              <Stack mt="25px" direction="column" gap="10px">
-                <Typography fontSize={18} color="#11142D">
-                  Contact
-                </Typography>
-                <Typography fontSize={14} color="#808191">
-                  {// @ts-ignore
-                  propertyInfo.phone}
-                </Typography>
-              </Stack>
-              <Stack mt="25px" direction="column" gap="10px">
-                <Typography fontSize={18} color="#11142D">
-                  Deal Type
-                </Typography>
-                <Typography fontSize={14} color="#808191">
-                  {// @ts-ignore
-                  propertyInfo.dealType}
-                </Typography>
-              </Stack>
+              <Typography fontSize={18} fontWeight={500} color="#11142D" mt={3}>
+                Total Area:  <Typography fontSize={14} fontWeight={600} color="#475be8"> Sq. Ft. {//@ts-ignore
+                propertyInfo.totalSquareFeet}</Typography>
+              </Typography>
+
+              <Typography fontSize={18} color="#11142D" mt={3}>
+                Description
+              </Typography>
+              <Typography fontSize={14} color="#808191">
+                {//@ts-ignore
+                propertyInfo.description}
+              </Typography>
+
+              <Typography fontSize={18} color="#11142D" mt={3}>
+                Contact
+              </Typography>
+              <Typography fontSize={14} color="#808191">
+                {//@ts-ignore
+                propertyInfo.phone}
+              </Typography>
+
+              <Typography fontSize={18} color="#11142D" mt={3}>
+                Deal Type
+              </Typography>
+              <Typography fontSize={14} color="#808191">
+                {//@ts-ignore
+                propertyInfo.dealType}
+              </Typography>
             </Box>
           </Box>
         </Grid>
 
-        <Grid item xs={12} lg={6}>
-          <Box display="flex" flexDirection="column" gap="20px">
+        <Grid item xs={12} md={6}>
+          <Box display="flex" flexDirection="column" gap={2}>
             <Stack
-              width="100%"
               p={2}
               direction="column"
               justifyContent="center"
@@ -175,44 +154,40 @@ const PropertyDetails = () => {
               border="1px solid #E4E4E4"
               borderRadius={2}
             >
-              <Stack mt={2} justifyContent="center" alignItems="center" textAlign="center">
-                <img
-                  src={// @ts-ignore
-                    propertyInfo.creator && checkImage(propertyInfo.creator.avatar) // @ts-ignore
-                      ? propertyInfo.creator.avatar
-                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
-                  }
-                  alt="avatar"
-                  width={90}
-                  height={90}
-                  style={{ borderRadius: "100%", objectFit: "cover" }}
-                />
+              <img
+                src={//@ts-ignore
+                  propertyInfo.creator && checkImage(propertyInfo.creator.avatar)
+                  //@ts-ignore
+                    ? propertyInfo.creator.avatar
+                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
+                }
+                alt="avatar"
+                width={90}
+                height={90}
+                style={{ borderRadius: "100%", objectFit: "cover" }}
+              />
 
-                <Box mt="15px">
-                  <Typography fontSize={18} fontWeight={600} color="#11142D">
-                  {// @ts-ignore
-                  propertyInfo.creator && propertyInfo.creator.name ? propertyInfo.creator.name : "Unknown"}
-                  </Typography>
+              <Typography fontSize={18} fontWeight={600} color="#11142D" mt={2}>
+                {//@ts-ignore
+                propertyInfo.creator?.name || "Unknown"}
+              </Typography>
+              <Typography fontSize={14} fontWeight={400} color="#808191" mt={0.5}>
+                Real Estate Agent
+              </Typography>
 
-                  <Typography mt="5px" fontSize={14} fontWeight={400} color="#808191">
-                    Real Estate Agent
-                  </Typography>
-                </Box>
-
-                <Stack mt="15px" direction="row" alignItems="center" gap={1}>
-                  <Place sx={{ color: "#808191" }} />
-                  <Typography fontSize={14} fontWeight={400} color="#808191">
-                    Indore, India
-                  </Typography>
-                </Stack>
-
-                <Typography mt={1} fontSize={16} fontWeight={600} color="#11142D">
-                  {// @ts-ignore
-                  propertyInfo.creator && propertyInfo.creator.allProperties ? propertyInfo.creator.allProperties.length : 0} Properties
+              <Stack direction="row" alignItems="center" gap={1} mt={1}>
+                <Place sx={{ color: "#808191" }} />
+                <Typography fontSize={14} color="#808191">
+                  Indore, India
                 </Typography>
               </Stack>
 
-              <Stack width="100%" mt="25px" direction="row" flexWrap="wrap" gap={2}>
+              <Typography fontSize={16} fontWeight={600} color="#11142D" mt={1}>
+                {//@ts-ignore
+                propertyInfo.creator?.allProperties?.length || 0} Properties
+              </Typography>
+
+              <Stack width="100%" mt={2} direction="row" flexWrap="wrap" gap={2}>
                 {isCurrentUser ? (
                   <>
                     <CustomButton
@@ -221,10 +196,8 @@ const PropertyDetails = () => {
                       color="#FCFCFC"
                       fullWidth
                       icon={<Edit />}
-                      handleClick={() => {
-                        navigate(`/allProperties/properties/edit/${// @ts-ignore
-                          propertyInfo._id}`);
-                      }}
+                      //@ts-ignore
+                      handleClick={() => navigate(`/allProperties/properties/edit/${propertyInfo._id}`)}
                     />
                     <CustomButton
                       title="Delete"
@@ -239,23 +212,25 @@ const PropertyDetails = () => {
                   <>
                     <CustomButton
                       title="WhatsApp"
-                      backgroundColor="#25D366" // WhatsApp green color
+                      backgroundColor="#25D366"
                       color="#FCFCFC"
                       fullWidth
-                      icon={<img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/whatsapp.svg" alt="WhatsApp" style={{ width: '24px', height: '24px' }} />}
-                      handleClick={() => {//@ts-ignore
-                        window.open(`https://wa.me/${propertyInfo.phone}`, '_blank');
-                      }}
+                      icon={
+                        <img
+                          src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/whatsapp.svg"
+                          alt="WhatsApp"
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      }//@ts-ignore
+                      handleClick={() => window.open(`https://wa.me/${propertyInfo.phone}`, "_blank")}
                     />
                     <CustomButton
                       title="Call"
-                      backgroundColor="#4CAF50" // Call button color
+                      backgroundColor="#4CAF50"
                       color="#FCFCFC"
                       fullWidth
-                      icon={<Phone />}
-                      handleClick={() => {//@ts-ignore
-                        window.open(`tel:${propertyInfo.phone}`);
-                      }}
+                      icon={<Phone />}//@ts-ignore
+                      handleClick={() => window.open(`tel:${propertyInfo.phone}`)}
                     />
                   </>
                 )}

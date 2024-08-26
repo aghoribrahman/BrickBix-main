@@ -27,15 +27,20 @@ export const AllProperties = () => {
     setPageSize,
     pageCount,
     setFilters,
+    setSorters,
+    sorters,
   } = useTable({
     resource: "properties",
+    initialSorter: [{ field: "createdAt", order: "desc" }],
   });
 
   const propertyValues = data?.data ?? [];
   const [filteredPageCount, setFilteredPageCount] = useState<number>(pageCount);
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  const [sorters, setSorters] = useState<{ field: string; order: string }[]>([]);
-
+ 
+  console.log(propertyValues)
+  
+  
   const currentPrice = sorters.find((item) => item.field === "price")?.order;
 
   const toggleSort = (field: string) => {
@@ -50,7 +55,6 @@ export const AllProperties = () => {
       timeout = setTimeout(() => {
         setFilters([
           { field: "title", operator: "contains", value: value || undefined },
-          { field: "location", operator: "contains", value: value || undefined },
         ]);
       }, 1500); // 1500ms debounce
     };
@@ -161,28 +165,29 @@ export const AllProperties = () => {
                 fullWidth
                 defaultValue=""
                 onChange={(e) => {
-                  setFilters(
+                    console.log('Selected category:', e.target.value); // Debug log
+                    setFilters(
                     [{ field: "propertyType", operator: "eq", value: e.target.value }],
                     "replace"
-                  );
+                    );
                 }}
-              >
+                >
                 <MenuItem value="">All</MenuItem>
                 {[
-                  "Apartment",
-                  "Rental",
-                  "Farmhouse",
-                  "Commercial",
-                  "Land",
-                  "Duplex",
-                  "Plot",
-                  "Room",
+                    "Apartment",
+                    "Rental",
+                    "Farmhouse",
+                    "Commercial",
+                    "Land",
+                    "Duplex",
+                    "Plot",
+                    "Room",
                 ].map((type) => (
-                  <MenuItem key={type} value={type.toLowerCase()}>
+                    <MenuItem key={type} value={type.toLowerCase()}>
                     {type}
-                  </MenuItem>
+                    </MenuItem>
                 ))}
-              </Select>
+                </Select>
             </Grid>
           </Grid>
         </Collapse>
