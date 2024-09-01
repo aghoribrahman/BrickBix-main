@@ -5,8 +5,8 @@ import {
   Box,
   Stack,
   Typography,
-  CircularProgress,
   MenuItem,
+  Skeleton,
   Select,
   TextField,
   Grid,
@@ -25,7 +25,6 @@ const Requirement = () => {
     current,
     setCurrent,
     pageSize,
-    setPageSize,
     pageCount,
     setFilters,
     setSorters,
@@ -36,7 +35,7 @@ const Requirement = () => {
   });
 
   const requirementValues = data?.data ?? [];
-  
+
   const [filteredPageCount, setFilteredPageCount] = useState<number>(pageCount);
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
@@ -48,23 +47,24 @@ const Requirement = () => {
   };
 
   const debouncedSearch = useMemo(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: number;
     return (value: string) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
+      timeout = window.setTimeout(() => {
         console.log('Setting filters with value:', value); // Debug log
         setFilters([
           { field: "title", operator: "contains", value: value || undefined },
           { field: "location", operator: "contains", value: value || undefined },
-        ]);
-      }, 1500); // Debounce delay
+        ],); // Ensure OR logic
+        setCurrent(1); // Reset to the first page on search
+      }, 1000); // Adjusted debounce delay for better UX
     };
-  }, [setFilters]);
+  }, [setFilters, setCurrent]);
 
   useEffect(() => {
     // Update pageCount dynamically based on the filtered data
     if (data) {
-      const totalProperties = data.total; // Assuming `total` is the total count of filtered properties from the backend
+      const totalProperties = data.total; // Ensure your backend sends `total`
       const updatedPageCount = Math.ceil(totalProperties / pageSize);
       setFilteredPageCount(updatedPageCount);
     }
@@ -81,18 +81,14 @@ const Requirement = () => {
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Typography>
-          <CircularProgress />
-        </Typography>
-      </div>
+      <Box sx={{ padding: 2 }}>
+        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} /> {/* Rectangular skeleton for content */}
+        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} />
+      </Box>
     );
   }
 
@@ -101,19 +97,17 @@ const Requirement = () => {
   }
 
   return (
-    <Box sx={{ marginBottom: "20px", padding: { xs: "10px", sm: "20px" } }}>
+    <Box>
       <Stack direction="column" width="100%">
         <Typography
           fontSize={{ xs: 20, sm: 25 }}
           fontWeight={700}
           color="#11142d"
-          mb={{ xs: 2, sm: 0 }}
         >
           {!requirementValues.length ? "There are no requirements" : "All Requirements"}
         </Typography>
         <Box
-          mb={2}
-          mt={3}
+          mt={1}
           width="100%"
           display="flex"
           flexDirection={{ xs: "column", sm: "row" }}
@@ -126,17 +120,32 @@ const Requirement = () => {
             placeholder="Search by title or location"
             fullWidth
             onChange={(e) => {
-                const value = e.currentTarget.value;
-                console.log('Search term:', value);
-                debouncedSearch(value);
+              debouncedSearch(e.currentTarget.value);
             }}
-            sx={{ mb: { xs: 2, sm: 0 }, width: { xs: "100%", sm: "70%" } }}
-            />
+            sx={{
+              width: { xs: "100%", sm: "70%" },
+              "& .MuiInputBase-root": {
+                height: "40px", // Reduced height
+                padding: "8px 12px", // Adjusted padding
+                fontSize: "14px", // Smaller font size
+              },
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "4px", // Optional: adjust border radius if needed
+              }
+            }}
+          />
           <Button
             variant="contained"
-            color={showFilters ? "secondary" : "primary"}
             onClick={() => setShowFilters((prev) => !prev)}
-            sx={{ mb: 2, mt: 2, width: { xs: "100%", sm: "auto" } }}
+            sx={{
+              mb: 2,
+              mt: 2,
+              width: { xs: "100%", sm: "auto" },
+              backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Custom color for secondary state
+              '&:hover': {
+                backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Optional hover color
+              }
+            }}
           >
             {showFilters ? "Hide Filters" : "Show Filters"}
           </Button>
@@ -147,14 +156,14 @@ const Requirement = () => {
               <CustomButton
                 title={`Sort price ${currentPrice === "asc" ? "↑" : "↓"}`}
                 handleClick={() => toggleSort("askedPrice")}
-                backgroundColor="#475be8"
+                backgroundColor="#0F52BA"
                 color="#fcfcfc"
                 icon={<Sort />}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <Typography variant="h6" sx={{ marginBottom: 2 }}>
+              <Typography sx={{ marginBottom: 2 }}>
                 Filter by Property Category
               </Typography>
               <Select
@@ -165,29 +174,39 @@ const Requirement = () => {
                 fullWidth
                 defaultValue=""
                 onChange={(e) => {
-                    console.log('Selected category:', e.target.value); // Debug log
-                    setFilters(
-                    [{ field: "propertyType", operator: "eq", value: e.target.value }],
-                    "replace"
-                    );
+                  setFilters([
+                    { field: "propertyType", operator: "eq", value: e.target.value || undefined },
+                  ], 'replace'); // Ensure replace logic
+                  setCurrent(1); // Reset to the first page on filter change
                 }}
-                >
+                sx={{
+                  "& .MuiSelect-select": {
+                    height: "40px", // Reduced height
+                    padding: "8px 12px", // Adjusted padding
+                    fontSize: "14px", // Smaller font size
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    height: "40px", // Ensure the root is the same height
+                    borderRadius: "4px", // Optional: adjust border radius if needed
+                  }
+                }}
+              >
                 <MenuItem value="">All</MenuItem>
                 {[
-                    "Apartment",
-                    "Rental",
-                    "Farmhouse",
-                    "Commercial",
-                    "Land",
-                    "Duplex",
-                    "Plot",
-                    "Room",
+                  "Apartment",
+                  "Rental",
+                  "Farmhouse",
+                  "Commercial",
+                  "Land",
+                  "Duplex",
+                  "Plot",
+                  "Room",
                 ].map((type) => (
-                    <MenuItem key={type} value={type.toLowerCase()}>
+                  <MenuItem key={type} value={type.toLowerCase()}>
                     {type}
-                    </MenuItem>
+                  </MenuItem>
                 ))}
-                </Select>
+              </Select>
             </Grid>
           </Grid>
         </Collapse>
@@ -196,12 +215,12 @@ const Requirement = () => {
           justifyContent="space-between"
           alignItems="center"
           spacing={2}
-          mt={3}
+          mt={1}
         >
           <CustomButton
             title="Add Requirement"
             handleClick={() => navigate("properties-requirement/create")}
-            backgroundColor="#475be8"
+            backgroundColor="#0F52BA"
             color="#fcfcfc"
             icon={<Add />}
           />
@@ -247,7 +266,7 @@ const Requirement = () => {
             <CustomButton
               title="Previous"
               handleClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} // Prevent going below 1
-              backgroundColor="#475be8"
+              backgroundColor="#0F52BA"
               color="#fcfcfc"
               disabled={current === 1}
             />
@@ -257,23 +276,10 @@ const Requirement = () => {
             <CustomButton
               title="Next"
               handleClick={() => setCurrent((prev) => Math.min(prev + 1, filteredPageCount))} // Prevent going above filteredPageCount
-              backgroundColor="#475be8"
+              backgroundColor="#0F52BA"
               color="#fcfcfc"
               disabled={current === filteredPageCount || requirementValues.length < pageSize}
             />
-            <Select
-              variant="outlined"
-              color="info"
-              displayEmpty
-              defaultValue={10}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-            >
-              {[10].map((size) => (
-                <MenuItem key={size} value={size}>
-                  Show {size}
-                </MenuItem>
-              ))}
-            </Select>
           </Box>
         )}
       </Stack>

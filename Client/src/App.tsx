@@ -81,13 +81,14 @@ const theme = createTheme({
 
 
 function App() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const authProvider: AuthBindings = {
     login: async ({ credential }: CredentialResponse) => {
       const profileObj = credential ? parseJwt(credential) : null;
-
+      
       if (profileObj) {
         const response = await fetch(
-            "http://localhost:8080/api/v1/users",
+            `${apiUrl}/api/v1/users`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -196,7 +197,7 @@ function App() {
              
               <Refine
                 
-                dataProvider={dataProvider("http://localhost:8080/api/v1")}
+                dataProvider={dataProvider(`${apiUrl}/api/v1`)}
                 notificationProvider={notificationProvider}
                 routerProvider={routerProvider}
                 authProvider={authProvider}

@@ -5,7 +5,7 @@ import {
   Box,
   Stack,
   Typography,
-  CircularProgress,
+  Skeleton, // Added import for Skeleton
   MenuItem,
   Select,
   TextField,
@@ -37,10 +37,7 @@ export const AllProperties = () => {
   const propertyValues = data?.data ?? [];
   const [filteredPageCount, setFilteredPageCount] = useState<number>(pageCount);
   const [showFilters, setShowFilters] = useState<boolean>(false);
- 
-  console.log(propertyValues)
-  
-  
+
   const currentPrice = sorters.find((item) => item.field === "price")?.order;
 
   const toggleSort = (field: string) => {
@@ -49,25 +46,32 @@ export const AllProperties = () => {
   };
 
   const debouncedSearch = useMemo(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: number;
     return (value: string) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
+      timeout = window.setTimeout(() => {
+        console.log('Setting filters with value:', value); // Debug log
         setFilters([
           { field: "title", operator: "contains", value: value || undefined },
-        ]);
-      }, 1500); // 1500ms debounce
+          { field: "location", operator: "contains", value: value || undefined },
+        ],); // Ensure OR logic
+        setCurrent(1); // Reset to the first page on search
+      }, 1000); // Adjusted debounce delay for better UX
     };
-  }, [setFilters]);
+  }, [setFilters, setCurrent]);
 
   useEffect(() => {
-    // Update pageCount dynamically based on the filtered data
     if (data) {
       const totalProperties = data.total; // Assuming `total` is the total count of filtered properties from the backend
       const updatedPageCount = Math.ceil(totalProperties / pageSize);
       setFilteredPageCount(updatedPageCount);
+
+      // Reset current page if filtered results are empty or if current page is out of bounds
+      if (propertyValues.length === 0 || current > updatedPageCount) {
+        setCurrent(1);
+      }
     }
-  }, [data, pageSize]);
+  }, [data, pageSize, propertyValues.length, current]);
 
   function checkURLValue(url: string): string {
     const urlSegments = url.split("/");
@@ -85,37 +89,31 @@ export const AllProperties = () => {
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Typography>
-          <CircularProgress />
-        </Typography>
-      </div>
+      <Box sx={{ padding: 2 }}>
+        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} /> {/* Rectangular skeleton for content */}
+        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} />
+      </Box>
     );
   }
 
   if (isError) return <Typography>Error fetching properties...</Typography>;
 
   return (
-    <Box sx={{ marginBottom: "20px", padding: { xs: "10px", sm: "20px" } }}>
+    <Box>
       <Stack direction="column" width="100%">
         <Typography
           fontSize={{ xs: 20, sm: 25 }}
           fontWeight={700}
           color="#11142d"
-          mb={{ xs: 2, sm: 0 }}
         >
           {!propertyValues.length ? "There are no properties" : "All Properties"}
         </Typography>
         <Box
-          mb={2}
-          mt={3}
+          mt={1}
           width="100%"
           display="flex"
           flexDirection={{ xs: "column", sm: "row" }}
@@ -130,13 +128,30 @@ export const AllProperties = () => {
             onChange={(e) => {
               debouncedSearch(e.currentTarget.value);
             }}
-            sx={{ mb: { xs: 2, sm: 0 }, width: { xs: "100%", sm: "70%" } }}
+            sx={{
+              width: { xs: "100%", sm: "70%" },
+              "& .MuiInputBase-root": {
+                height: "40px", // Reduced height
+                padding: "8px 12px", // Adjusted padding
+                fontSize: "14px", // Smaller font size
+              },
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "4px", // Optional: adjust border radius if needed
+              }
+            }}
           />
           <Button
             variant="contained"
-            color={showFilters ? "secondary" : "primary"}
             onClick={() => setShowFilters((prev) => !prev)}
-            sx={{ mb: 2, mt: 2, width: { xs: "100%", sm: "auto" } }}
+            sx={{
+              mb: 2,
+              mt: 2,
+              width: { xs: "100%", sm: "auto" },
+              backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Custom color for secondary state
+              '&:hover': {
+                backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Optional hover color
+              }
+            }}
           >
             {showFilters ? "Hide Filters" : "Show Filters"}
           </Button>
@@ -147,14 +162,14 @@ export const AllProperties = () => {
               <CustomButton
                 title={`Sort price ${currentPrice === "asc" ? "↑" : "↓"}`}
                 handleClick={() => toggleSort("price")}
-                backgroundColor="#475be8"
+                backgroundColor="#0F52BA"
                 color="#fcfcfc"
                 icon={<Sort />}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <Typography variant="h6" sx={{ marginBottom: 2 }}>
+              <Typography sx={{ marginBottom: 2 }}>
                 Filter by Property Category
               </Typography>
               <Select
@@ -165,13 +180,24 @@ export const AllProperties = () => {
                 fullWidth
                 defaultValue=""
                 onChange={(e) => {
-                    console.log('Selected category:', e.target.value); // Debug log
                     setFilters(
                     [{ field: "propertyType", operator: "eq", value: e.target.value }],
                     "replace"
                     );
+                    setCurrent(1); // Reset to the first page on filter change
                 }}
-                >
+                sx={{
+                  "& .MuiSelect-select": {
+                    height: "40px", // Reduced height
+                    padding: "8px 12px", // Adjusted padding
+                    fontSize: "14px", // Smaller font size
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    height: "40px", // Ensure the root is the same height
+                    borderRadius: "4px", // Optional: adjust border radius if needed
+                  }
+                }}
+              >
                 <MenuItem value="">All</MenuItem>
                 {[
                     "Apartment",
@@ -187,7 +213,7 @@ export const AllProperties = () => {
                     {type}
                     </MenuItem>
                 ))}
-                </Select>
+              </Select>
             </Grid>
           </Grid>
         </Collapse>
@@ -196,12 +222,12 @@ export const AllProperties = () => {
           justifyContent="space-between"
           alignItems="center"
           spacing={2}
-          mt={3}
+          mt={1}
         >
           <CustomButton
             title="Add Property"
             handleClick={() => navigate("/allProperties/properties/create")}
-            backgroundColor="#475be8"
+            backgroundColor="#0F52BA"
             color="#fcfcfc"
             icon={<Add />}
           />
@@ -231,47 +257,32 @@ export const AllProperties = () => {
             />
           ))}
         </Box>
-        {propertyValues.length > 0 && (
-          <Box
-            display="flex"
-            gap={2}
-            mt={3}
-            flexWrap="wrap"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <CustomButton
-              title="Previous"
-              handleClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} // Prevent going below 1
-              backgroundColor="#475be8"
-              color="#fcfcfc"
-              disabled={current === 1}
-            />
-            <Box display={{ xs: "none", sm: "flex" }} alignItems="center" gap="5px">
-              Page <strong>{current} of {filteredPageCount}</strong>
-            </Box>
-            <CustomButton
-              title="Next"
-              handleClick={() => setCurrent((prev) => Math.min(prev + 1, filteredPageCount))} // Prevent going above filteredPageCount
-              backgroundColor="#475be8"
-              color="#fcfcfc"
-              disabled={current === filteredPageCount || propertyValues.length < pageSize}
-            />
-            <Select
-              variant="outlined"
-              color="info"
-              displayEmpty
-              defaultValue={10}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-            >
-              {[10].map((size) => (
-                <MenuItem key={size} value={size}>
-                  Show {size}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-        )}
+        <Box
+          display="flex"
+          gap={2}
+          mt={3}
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CustomButton
+            title="Previous"
+            handleClick={() => setCurrent((prev) => Math.max(prev - 1, 1))}
+            backgroundColor="#0F52BA"
+            color="#fcfcfc"
+            disabled={current === 1}
+          />
+          <Typography>
+            Page {current} of {filteredPageCount}
+          </Typography>
+          <CustomButton
+            title="Next"
+            handleClick={() => setCurrent((prev) => Math.min(prev + 1, filteredPageCount))}
+            backgroundColor="#0F52BA"
+            color="#fcfcfc"
+            disabled={current === filteredPageCount}
+          />
+        </Box>
       </Stack>
     </Box>
   );

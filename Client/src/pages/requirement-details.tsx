@@ -29,13 +29,13 @@ const RequirementDetails = () => {
   const { mutate } = useDelete();
   const { id } = useParams();
   const [propertyInfo, setPropertyInfo] = useState(null);
-  
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
       try {
         // Construct the API endpoint URL based on the id parameter
-        const endpoint = `http://localhost:8080/api/v1/requirement/${id}`;
+        const endpoint = `${apiUrl}/api/v1/requirement/${id}`;
         
         // Make the API call
         const response = await axios.get(endpoint);
@@ -139,7 +139,7 @@ const RequirementDetails = () => {
                     Price
                   </Typography>
                   <Stack direction="row" alignItems="flex-end" gap={1}>
-                  <Typography fontSize={14} fontWeight={600} color="#475be8">
+                  <Typography fontSize={14} fontWeight={600} color="#0F52BA">
                     ₹ {new Intl.NumberFormat('en-IN').format(parseFloat(//@ts-ignore
                       propertyInfo.askedPrice))}/-
                   </Typography>
@@ -238,12 +238,12 @@ const RequirementDetails = () => {
                   <>
                     <CustomButton
                       title="Edit"
-                      backgroundColor="#475BE8"
+                      backgroundColor="#0F52BA"
                       color="#FCFCFC"
                       fullWidth
                       icon={<Edit />}
                       handleClick={() => {
-                        navigate(`/allProperties/properties/edit/${// @ts-ignore
+                        navigate(`/requirement/properties-requirement/edit/${// @ts-ignore
                           propertyInfo._id}`);
                       }}
                     />
@@ -295,7 +295,7 @@ const RequirementDetails = () => {
                   */}
             {/* Book Now Button
             <Box>
-              <CustomButton title="Book Now" backgroundColor="#475BE8" color="#FCFCFC" fullWidth />
+              <CustomButton title="Book Now" backgroundColor="#0F52BA" color="#FCFCFC" fullWidth />
             </Box> */}
           </Box>
         </Grid>

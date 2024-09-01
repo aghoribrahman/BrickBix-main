@@ -17,20 +17,21 @@ const CustomButton = ({
           disabled={disabled}
           type={type === "submit" ? "submit" : "button"}
           sx={{
-              flex: fullWidth ? 1 : "unset",
-              padding: "10px 15px",
-              width: fullWidth ? "100%" : "fit-content",
-              minWidth: 130,
+            flex: fullWidth ? 1 : "unset",
+            padding: "8px 12px", // Reduced padding for smaller button size
+            width: fullWidth ? "100%" : "fit-content",
+            minWidth: 100, // Reduced minimum width
+            backgroundColor,
+            color,
+            fontSize: 14, // Reduced font size
+            fontWeight: 500, // Adjusted font weight for a lighter feel
+            gap: "8px",
+            textTransform: "capitalize",
+            borderRadius: "20px", // More curvy with increased border-radius
+            "&:hover": {
+              opacity: 0.9,
               backgroundColor,
-              color,
-              fontSize: 16,
-              fontWeight: 600,
-              gap: "10px",
-              textTransform: "capitalize",
-              "&:hover": {
-                  opacity: 0.9,
-                  backgroundColor,
-              },
+            },
           }}
           onClick={handleClick}
       >

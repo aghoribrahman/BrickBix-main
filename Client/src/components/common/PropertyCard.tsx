@@ -46,7 +46,7 @@ const PropertyCard = ({
           position: "absolute",
           top: 0,
           left: 0,
-          backgroundColor: "#475be8",
+          backgroundColor: "#0F52BA",
           color: "#ffffff",
           padding: "4px 8px",
           borderTopLeftRadius: "10px",
@@ -109,7 +109,7 @@ const PropertyCard = ({
           bgcolor="#dadefa"
           height="fit-content"
         >
-          <Typography fontSize={14} fontWeight={600} color="#475be8">
+          <Typography fontSize={14} fontWeight={600} color="#0F52BA">
             ₹ {new Intl.NumberFormat("en-IN").format(parseFloat(price))}/-
           </Typography>
           <Typography fontSize={14} fontWeight={600}>

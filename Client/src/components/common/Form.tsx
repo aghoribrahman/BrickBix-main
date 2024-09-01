@@ -313,7 +313,7 @@ const Form = ({
           <CustomButton
             type="submit"
             title={formLoading ? "Submitting..." : "Submit"}
-            backgroundColor="#475be8"
+            backgroundColor="#0F52BA"
             color="#fcfcfc"
             handleClick={handleClick}
             disabled={formLoading}

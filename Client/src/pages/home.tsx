@@ -1,73 +1,99 @@
-import { useList } from "@refinedev/core";
+import { useEffect, useState, useMemo } from "react";
+import { useGetIdentity, useActiveAuthProvider } from "@refinedev/core";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { useEffect, useState } from "react";
-import {
-  useGetIdentity,
-  useActiveAuthProvider,
-} from "@refinedev/core";
+import Skeleton from "@mui/material/Skeleton";
 import BrickBixImage from '../assets/brick bix image.jpg';
-import  PieChart  from '../components/charts/PieChart';
-import  PropertyReferrals  from '../components/charts/PropertyReferrals';
-import  TotalRevenue  from '../components/charts/TotalRevenue';
+import PieChart from '../components/charts/PieChart';
+import PropertyReferrals from '../components/charts/PropertyReferrals';
+import TotalRevenue from '../components/charts/TotalRevenue';
 import PropertyCard from "../components/common/PropertyCard";
-
-
+import CustomButton from "../components/common/CustomButton";
+import { useNavigate } from "react-router-dom";
+import { Add } from "@mui/icons-material";
 
 const Home = () => {
   const authProvider = useActiveAuthProvider();
   const { data: user } = useGetIdentity({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [myProperties, setMyProperties] = useState([]);
+  const [requirements, setRequirements] = useState([]);
+  const [totalPropertiesCount, setTotalPropertiesCount] = useState(0);
+  const [commercialPropertiesCount, setCommercialPropertiesCount] = useState(0);
+  const [apartmentPropertiesCount, setApartmentPropertiesCount] = useState(0);
+  const [totalRequirementsCount, setTotalRequirementsCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const [myProperties, setMyProperties] = useState<any[]>([]);
-  const [requirements, setRequirements] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProperties = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/properties/five");
-            const responseRequirement = await fetch("http://localhost:8080/api/v1/requirement/five");
-            if (!response.ok || !responseRequirement.ok) {
-                throw new Error("Failed to fetch properties");
-            }
-            const data = await response.json();
-            const dataRequirement = await responseRequirement.json()
-            console.log(data)
-            setMyProperties(data.properties);
-            setRequirements(dataRequirement.requirements)
-        } catch (error) {
-            console.error("Error fetching properties:", error);
+    const fetchData = async () => {
+      try {
+        const [propertiesRes, requirementsRes] = await Promise.all([
+          fetch(`${apiUrl}/api/v1/properties/five`),
+          fetch(`${apiUrl}/api/v1/requirement/five`)
+        ]);
+
+        if (!propertiesRes.ok || !requirementsRes.ok) {
+          throw new Error("Failed to fetch properties or requirements");
         }
+
+        const propertiesData = await propertiesRes.json();
+        const requirementsData = await requirementsRes.json();
+
+        setMyProperties(propertiesData.properties);
+        setRequirements(requirementsData.requirements);
+        setTotalPropertiesCount(propertiesData.totalPropertiesCount);
+        setCommercialPropertiesCount(propertiesData.commercialPropertiesCount);
+        setApartmentPropertiesCount(propertiesData.apartmentPropertiesCount);
+        setTotalRequirementsCount(requirementsData.totalRequirementsCount);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchProperties();
-}, []);
-    
-  console.log(myProperties);
-  console.log(requirements);
-const commercialProperties = myProperties.filter(property => property.propertyType === 'commercial');
+    fetchData();
+  }, [apiUrl]);
 
-const apartmentProperties = myProperties.filter(property => property.propertyType === 'apartment');
-
-
-const apartmentPropertiesCount = apartmentProperties.length;
-
-const commercialPropertiesCount = commercialProperties.length;
-
-
+  const userNameDisplay = useMemo(() => (
+    user?.name ? (
+      <Typography 
+        sx={{ fontWeight: "bold", fontSize: '12px' }} 
+        variant="subtitle2" 
+        data-testid="header-user-name"
+      >
+        <span style={{ color: '#FF8C00' }}>Welcome</span>{' '}
+        <span style={{ color: '#0F52BA' }}>{user.name.toUpperCase()}</span>!
+      </Typography>
+    ) : null
+  ), [user?.name]);
+  
+  
 
   return (
-    <Box>
-      <Typography sx={{margin:'10px'}} fontSize={15} fontWeight={700} color="#11142D">
-        {user?.name && (
-          <Typography style={{ fontWeight: "bold", fontSize: '15px' }} color="textPrimary" variant="subtitle2" data-testid="header-user-name">
-            {user?.name} 
-          </Typography>
-        )}
-        
-      </Typography>
+    <Box sx={{ padding: '16px' }}>
+        {userNameDisplay}
+      <Stack direction={{ xs: "row", sm: "row" }} spacing={2} mt={2} sx={{ flexWrap: "wrap" }}>
+        <CustomButton
+          title="Add Property"
+          handleClick={() => navigate("/allProperties/properties/create")}
+          backgroundColor="#0F52BA"
+          color="#fcfcfc"
+          icon={<Add />}
+        />
+        <CustomButton
+          title="Add Requirement"
+          handleClick={() => navigate("requirement/properties-requirement/create")}
+          backgroundColor="#0F52BA"
+          color="#fcfcfc"
+          icon={<Add />}
+        />
+      </Stack>
 
       <Box
         flex={1}
@@ -75,35 +101,54 @@ const commercialPropertiesCount = commercialProperties.length;
         padding="20px"
         bgcolor="#F6F5F2"
         display="flex"
-        justifyContent="center" 
+        justifyContent="center"
         alignItems="center"
         flexDirection="column"
-        minWidth="100%"
+        width="100%"
         mt="25px"
       >
         <Typography fontSize="18px" fontWeight={600} color="#11142d">
-          Latest Properties 
+          Latest Properties
         </Typography>
         <Box
-            mt={2.5}
-            sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 4 }} 
+          mt={2}
+          sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 2 }}
         >
-            {myProperties.slice().reverse().slice(0, 5).map((property) => (
-                <PropertyCard
-                    key={property._id}
-                    id={property._id}
-                    title={property.title}
-                    location={property.location}
-                    dealType={property.dealType}
-                    price={property.price}
-                    phone={property.phone}
-                    photo={property.photo}
-                    propertyType={property.propertyType}
-                    url={"properties"}
-                />
-            ))}
+          {loading ? (
+            Array.from(new Array(3)).map((_, index) => (
+              <Box key={index} sx={{ width: 250, height: 200, padding: 1 }}>
+                <Skeleton variant="rectangular" width="100%" height="50%" />
+                <Skeleton variant="text" width="60%" sx={{ marginTop: 1 }} />
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="30%" sx={{ marginTop: 1 }} />
+              </Box>
+            ))
+          ) : (
+            myProperties.slice().reverse().slice(0, 5).map((property) => (
+              <PropertyCard
+              //@ts-ignore
+                key={property._id}
+                //@ts-ignore
+                id={property._id}
+                //@ts-ignore
+                title={property.title}
+                //@ts-ignore
+                location={property.location}
+                //@ts-ignore
+                dealType={property.dealType}
+                //@ts-ignore
+                price={property.price}
+                //@ts-ignore
+                phone={property.phone}
+                //@ts-ignore
+                photo={property.photo}
+                //@ts-ignore
+                propertyType={property.propertyType}
+                url={"properties"}
+              />
+            ))
+          )}
         </Box>
-
       </Box>
 
       <Box
@@ -112,61 +157,79 @@ const commercialPropertiesCount = commercialProperties.length;
         padding="20px"
         bgcolor="#F6F5F2"
         display="flex"
-        justifyContent="center" 
+        justifyContent="center"
         alignItems="center"
         flexDirection="column"
-        minWidth="100%"
+        width="100%"
         mt="25px"
       >
         <Typography fontSize="18px" fontWeight={600} color="#11142d">
           Latest Requirement
         </Typography>
         <Box
-            mt={2.5}
-            sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 4 }} 
+          mt={2.5}
+          sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 2 }}
         >
-            {requirements.slice().reverse().slice(0, 5).map((property) => (
-                <PropertyCard
-                    key={property._id}
-                    id={property._id}
-                    title={property.title}
-                    location={property.location}
-                    dealType={property.dealType}
-                    price={property.askedPrice}
-                    phone={property.phone}
-                    photo={BrickBixImage}
-                    propertyType={property.propertyType}
-                    url={"properties-requirement"}
-                />
-            ))}
+          {loading ? (
+            Array.from(new Array(3)).map((_, index) => (
+              <Box key={index} sx={{ width: 250, height: 200, padding: 1 }}>
+                <Skeleton variant="rectangular" width="100%" height="50%" />
+                <Skeleton variant="text" width="60%" sx={{ marginTop: 1 }} />
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="30%" sx={{ marginTop: 1 }} />
+              </Box>
+            ))
+          ) : (
+            requirements.slice().reverse().slice(0, 5).map((property) => (
+              <PropertyCard
+              //@ts-ignore
+                key={property._id}
+                //@ts-ignore
+                id={property._id}
+                //@ts-ignore
+                title={property.title}
+                //@ts-ignore
+                location={property.location}
+                //@ts-ignore
+                dealType={property.dealType}
+                //@ts-ignore
+                price={property.askedPrice}
+                //@ts-ignore
+                phone={property.phone}
+                //@ts-ignore
+                photo={BrickBixImage}
+                //@ts-ignore
+                propertyType={property.propertyType}
+                url={"properties-requirement"}
+              />
+            ))
+          )}
         </Box>
-
       </Box>
-       
 
-      <Box mt="20px" display="flex" flexWrap="wrap" gap={4}>
+      <Box mt="20px" display="flex" flexWrap="wrap" gap={2}>
         <PieChart
-          title="Properties Listed"
-          value={myProperties.length}
-          series={[75, 25]}
+          title="Total Properties"
+          value={totalPropertiesCount}
+          series={[totalPropertiesCount, 100 - totalPropertiesCount]}
+          colors={["#275be8", "#c4e8ef"]}
+        />
+        <PieChart
+          title="Commercial Properties"
+          value={commercialPropertiesCount}
+          series={[commercialPropertiesCount, 100 - commercialPropertiesCount]}
+          colors={["#275be8", "#c4e8ef"]}
+        />
+        <PieChart
+          title="Apartments"
+          value={apartmentPropertiesCount}
+          series={[apartmentPropertiesCount, 100 - apartmentPropertiesCount]}
           colors={["#275be8", "#c4e8ef"]}
         />
         <PieChart
           title="Requirements Listed"
-          value={requirements.length}
-          series={[60, 40]}
-          colors={["#275be8", "#c4e8ef"]}
-        />
-        <PieChart
-          title="Commercial Properties for Sell"
-          value={commercialPropertiesCount}
-          series={[75, 25]}
-          colors={["#275be8", "#c4e8ef"]}
-        />
-        <PieChart
-          title="Apartment For Sell"
-          value={apartmentPropertiesCount}
-          series={[75, 25]}
+          value={totalRequirementsCount}
+          series={[totalRequirementsCount, 100 - totalRequirementsCount]}
           colors={["#275be8", "#c4e8ef"]}
         />
       </Box>
@@ -175,7 +238,7 @@ const commercialPropertiesCount = commercialProperties.length;
         mt="25px"
         width="100%"
         direction={{ xs: "column", lg: "row" }}
-        gap={4}
+        gap={2}
       >
         <TotalRevenue />
         <PropertyReferrals />

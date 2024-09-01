@@ -25,11 +25,11 @@ const PropertyDetails = () => {
   const { mutate } = useDelete();
   const { id } = useParams();
   const [propertyInfo, setPropertyInfo] = useState(null);
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchPropertyDetails = async () => {
       try {
-        const endpoint = `http://localhost:8080/api/v1/properties/${id}`;
+        const endpoint = `${apiUrl}/api/v1/properties/${id}`;
         const response = await axios.get(endpoint);
         setPropertyInfo(response.data);
       } catch (error) {
@@ -55,8 +55,7 @@ const PropertyDetails = () => {
       );
     }
   };
-  console.log(propertyInfo.title)
-  console.log(propertyInfo.totalSquareFeet)
+
   return (
     <Box padding={{ xs: "10px", sm: "20px" }} bgcolor="#FCFCFC" borderRadius="15px" width="100%">
       <Typography fontSize={25} fontWeight={700} color="#11142D" textAlign="center" mb={3}>
@@ -105,7 +104,7 @@ const PropertyDetails = () => {
                   <Typography fontSize={16} fontWeight={600} color="#11142D">
                     Total Price
                   </Typography>
-                  <Typography fontSize={14} fontWeight={600} color="#475be8">
+                  <Typography fontSize={14} fontWeight={600} color="#0F52BA">
                     ₹ {new Intl.NumberFormat('en-IN').format(parseFloat(//@ts-ignore
                     propertyInfo.price))}/-
                   </Typography>
@@ -113,7 +112,7 @@ const PropertyDetails = () => {
               </Stack>
 
               <Typography fontSize={18} fontWeight={500} color="#11142D" mt={3}>
-                Total Area:  <Typography fontSize={14} fontWeight={600} color="#475be8"> Sq. Ft. {//@ts-ignore
+                Total Area:  <Typography fontSize={14} fontWeight={600} color="#0F52BA"> Sq. Ft. {//@ts-ignore
                 propertyInfo.totalSquareFeet}</Typography>
               </Typography>
 
@@ -192,7 +191,7 @@ const PropertyDetails = () => {
                   <>
                     <CustomButton
                       title="Edit"
-                      backgroundColor="#475BE8"
+                      backgroundColor="#0F52BA"
                       color="#FCFCFC"
                       fullWidth
                       icon={<Edit />}

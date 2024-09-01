@@ -26,9 +26,9 @@ const TotalRevenue = () => {
           ₹ 236,535
         </Typography>
         <Stack direction="row" alignItems="center" gap={1}>
-          <ArrowCircleUpRounded sx={{ fontSize: 25, color: "#475be8" }} />
+          <ArrowCircleUpRounded sx={{ fontSize: 25, color: "#0F52BA" }} />
           <Stack>
-            <Typography fontSize={15} color="#475be8">
+            <Typography fontSize={15} color="#0F52BA">
               0.8%
             </Typography>
             <Typography fontSize={12} color="#808191">
