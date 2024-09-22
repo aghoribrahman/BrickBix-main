@@ -1,3 +1,3 @@
-Clone This project
-Install Dependencies from dependencies.txt file,
-npm run dev
+Clone This project-
+Install Dependencies from dependencies.txt file-
+npm start
