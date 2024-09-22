@@ -10,6 +10,7 @@ import { AccountCircleOutlined,
         PeopleAltOutlined,
         StarBorderOutlined,
         VillaOutlined,
+        ContactPage,
 } from "@mui/icons-material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import RoofingIcon from '@mui/icons-material/Roofing';
@@ -51,6 +52,11 @@ import Agents from "./pages/agents";
 import { CreateRequirement } from "./pages/create-requirement";
 import EditRequirement from "./pages/edit-requirement";
 import RequirementDetails from "./pages/requirement-details";
+import ContactUs from "./pages/contact-us";
+import TermsAndConditions from "./pages/terms-and-conditions";
+import { Footer } from "antd/es/layout/layout";
+import { Link } from "react-router-dom"; // Ensure you import Link
+
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -236,6 +242,12 @@ function App() {
                     list: "/my-profile",
                     icon: <AccountCircleOutlined />,
                   },
+                  {
+                    name: "conatct-us",
+                    options: { label: 'Contact Us'},
+                    list: "/contact-us",
+                    icon: <ContactPage />,
+                  },
                 ]}
               
 
@@ -285,6 +297,12 @@ function App() {
                     <Route path="/my-profile">
                       <Route index element={<MyProfile />} />
                     </Route>
+                    <Route path="/contact-us">
+                      <Route index element={<ContactUs />} />
+                    </Route>
+                    <Route path="/terms-and-conditions">
+                      <Route index element={<TermsAndConditions />} />
+                    </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
@@ -309,6 +327,12 @@ function App() {
             </DevtoolsProvider>
            
           </RefineSnackbarProvider>
+          <Footer style={{ textAlign: 'center' }}>
+            © 2024 BrickBix Technologies. All rights reserved. | 
+            <Link to="/terms-and-conditions" style={{ marginLeft: '5px', color: '#1890ff', textDecoration: 'underline' }}>
+              Terms and Conditions
+            </Link>
+          </Footer>
         </ColorModeContextProvider>
         
       </RefineKbarProvider>

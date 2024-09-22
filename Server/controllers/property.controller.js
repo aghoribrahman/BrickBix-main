@@ -195,7 +195,7 @@ const deleteProperty = async (req, res) => {
       });
 
       // Delete the property from the database
-      await propertyToDelete.remove({ session });
+      await propertyToDelete.deleteOne({ session });
       propertyToDelete.creator.allProperties.pull(propertyToDelete);
       await propertyToDelete.creator.save({ session });
       await session.commitTransaction();

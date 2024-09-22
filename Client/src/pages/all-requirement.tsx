@@ -99,13 +99,14 @@ const Requirement = () => {
   return (
     <Box>
       <Stack direction="column" width="100%">
-        <Typography
-          fontSize={{ xs: 20, sm: 25 }}
-          fontWeight={700}
-          color="#11142d"
-        >
-          {!requirementValues.length ? "There are no requirements" : "All Requirements"}
-        </Typography>
+      <Typography 
+            sx={{ fontWeight: "bold", fontSize: '20px' }} 
+            variant="subtitle2" 
+            data-testid="header-user-name"
+          >
+            <span style={{ color: '#d84030' }}>{!requirementValues.length ? "There are no properties" : "All"}</span>{' '}
+            <span style={{ color: '#11418a' }}>{!requirementValues.length ? "There are no properties" : "Requirement"}</span>!
+          </Typography>
         <Box
           mt={1}
           width="100%"
@@ -270,9 +271,9 @@ const Requirement = () => {
               color="#fcfcfc"
               disabled={current === 1}
             />
-            <Box display={{ xs: "none", sm: "flex" }} alignItems="center" gap="5px">
-              Page <strong>{current} of {filteredPageCount}</strong>
-            </Box>
+            <Typography>
+              <span style={{ color: '#d84030' }}>Page</span>{' '}  <span style={{ color: '#11418a' }}>{current}</span> 
+            </Typography>
             <CustomButton
               title="Next"
               handleClick={() => setCurrent((prev) => Math.min(prev + 1, filteredPageCount))} // Prevent going above filteredPageCount

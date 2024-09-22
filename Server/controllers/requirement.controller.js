@@ -143,7 +143,7 @@ const deleteRequirement = async (req, res) => {
 
     try {
       // Remove the requirement document
-      await propertyToDelete.remove({ session });
+      await propertyToDelete.deleteOne({ session });
 
       // Remove the reference to the requirement from the user's array
       const user = propertyToDelete.creator;

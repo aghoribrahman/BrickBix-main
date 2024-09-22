@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useActiveAuthProvider } from "@refinedev/core";
 import { AgentCardProp, InfoBarProps } from "../../interfaces/agent";
+import { Link } from "react-router-dom";
 
 function checkImage(url: any) {
   const img = new Image();
@@ -16,7 +17,7 @@ function checkImage(url: any) {
 }
 
 const InfoBar = ({ icon, name }: InfoBarProps) => (
-  <Stack flex={1} minWidth={{ xs: "100%", sm: 300 }} gap={1.5} direction="row">
+  <Stack flex={1} minWidth={{ xs: "100%", sm: 200 }} gap={1} direction="row" alignItems="center">
     {icon}
     <Typography fontSize={14} color="#808191">
       {name}
@@ -38,84 +39,72 @@ const AgentCard = ({
 
   const generateLink = () => {
     if (currentUser.email === email) return "/my-profile";
-
     return `/agents/show/${id}`;
   };
 
   return (
-    
     <Box
-    display="flex"
-    alignItems="center"
-    justifyContent="center"
-    height="100vh" // Adjust the height as needed
-  >
-    <Typography variant="h4" align="center" color="primary">
-      Coming Soon
-    </Typography>
-    
-    {/*<Box
-      component={Link}
-      to={generateLink()}
-      width="100%"
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        gap: "20px",
-        padding: "20px",
-        "&:hover": {
-          boxShadow: "0 22px 45px 2px rgba(176,176,176,0.1)",
-        },
-      }}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ margin: '20px 0' }} // Add spacing between cards
     >
-      <img
-        src={
-          checkImage(avatar)
-            ? avatar
-            : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
-        }
-        alt="user"
-        width={90}
-        height={90}
-        style={{ borderRadius: 8, objectFit: "cover" }}
-      />
-      <Stack
-        direction="column"
-        justifyContent="space-between"
-        flex={1}
-        gap={{ xs: 4, sm: 2 }}
+      <Box
+        component={Link}
+        to={generateLink()}
+        width="100%"
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          padding: "20px",
+          backgroundColor: "#fff",
+          borderRadius: "12px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          transition: "box-shadow 0.3s ease-in-out",
+          "&:hover": {
+            boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+          },
+        }}
       >
-        <Stack gap={2} direction="row" flexWrap="wrap" alignItems="center">
-          <Typography fontSize={22} fontWeight={600} color="#11142d">
-            {name}
-          </Typography>
-          <Typography fontSize={14} color="#808191">
-            Real-Estate Agent
-          </Typography>
-        </Stack>
+        <img
+          src={
+            checkImage(avatar)
+              ? avatar
+              : "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
+          }
+          alt="user"
+          width={90}
+          height={90}
+          style={{ borderRadius: "50%", objectFit: "cover", marginRight: "20px" }}
+        />
         <Stack
-          direction="row"
-          flexWrap="wrap"
+          direction="column"
           justifyContent="space-between"
-          alignItems="center"
-          gap={2}
+          flex={1}
+          gap={{ xs: 2, sm: 3 }}
         >
-          <InfoBar
-            icon={<EmailOutlined sx={{ color: "#808191" }} />}
-            name={email}
-          />
-          <InfoBar icon={<Place sx={{ color: "#808191" }} />} name="London" />
-          <InfoBar
-            icon={<Phone sx={{ color: "#808191" }} />}
-            name="+502-3231-4141"
-          />
-          <InfoBar
-            icon={<LocationCity sx={{ color: "#808191" }} />}
-            name={`${noOfProperties} Properties`}
-          />
+          <Stack gap={1} direction="row" flexWrap="wrap" alignItems="center">
+            <Typography fontSize={22} fontWeight={600} color="#11142d">
+              {name}
+            </Typography>
+            <Typography fontSize={14} color="#808191">
+              Real-Estate Agent
+            </Typography>
+          </Stack>
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            justifyContent="space-between"
+            alignItems="center"
+            gap={2}
+          >
+            <InfoBar icon={<EmailOutlined sx={{ color: "#808191" }} />} name={email} />
+            <InfoBar icon={<Place sx={{ color: "#808191" }} />} name="Indore" />
+            <InfoBar icon={<Phone sx={{ color: "#808191" }} />} name="NA" />
+            {/*<InfoBar icon={<LocationCity sx={{ color: "#808191" }} />} name={`${noOfProperties} Properties`} />*/}
+          </Stack>
         </Stack>
-      </Stack>
-      </Box> */}
+      </Box>
     </Box>
   );
 };

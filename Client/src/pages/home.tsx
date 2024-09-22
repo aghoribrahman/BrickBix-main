@@ -67,8 +67,8 @@ const Home = () => {
         variant="subtitle2" 
         data-testid="header-user-name"
       >
-        <span style={{ color: '#FF8C00' }}>Welcome</span>{' '}
-        <span style={{ color: '#0F52BA' }}>{user.name.toUpperCase()}</span>!
+        <span style={{ color: '#d84030' }}>Welcome</span>{' '}
+        <span style={{ color: '#11418a' }}>{user.name.toUpperCase()}</span>!
       </Typography>
     ) : null
   ), [user?.name]);
@@ -76,9 +76,9 @@ const Home = () => {
   
 
   return (
-    <Box sx={{ padding: '16px' }}>
+    <Box sx={{ padding: '10px' }}>
         {userNameDisplay}
-      <Stack direction={{ xs: "row", sm: "row" }} spacing={2} mt={2} sx={{ flexWrap: "wrap" }}>
+      <Stack direction={{ xs: "row", sm: "row" }} spacing={2} mt={1} sx={{ flexWrap: "wrap" }}>
         <CustomButton
           title="Add Property"
           handleClick={() => navigate("/allProperties/properties/create")}
@@ -105,13 +105,13 @@ const Home = () => {
         alignItems="center"
         flexDirection="column"
         width="100%"
-        mt="25px"
+        mt="15px"
       >
         <Typography fontSize="18px" fontWeight={600} color="#11142d">
           Latest Properties
         </Typography>
         <Box
-          mt={2}
+          mt={1}
           sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 2 }}
         >
           {loading ? (
@@ -167,7 +167,7 @@ const Home = () => {
           Latest Requirement
         </Typography>
         <Box
-          mt={2.5}
+          mt={1}
           sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 2 }}
         >
           {loading ? (

@@ -19,20 +19,22 @@ const Agents = () => {
 
     return (
         <Box>
-            <Typography fontSize={25} fontWeight={700} color="#11142d">
-                Agents List
+            <Typography 
+                sx={{ fontWeight: "bold", fontSize: '20px' }} 
+                variant="subtitle2" 
+                data-testid="header-user-name"
+            >
+                <span style={{ color: '#d84030' }}>Agent</span>{' '}
+                <span style={{ color: '#11418a' }}>List</span>!
             </Typography>
             <Box
             display="flex"
             alignItems="center"
             justifyContent="center"
-            height="100vh" // Adjust the height as needed
         >
-            <Typography variant="h4" align="center" color="primary">
-            Coming Soon
-            </Typography>
+            
             </Box>
-            {/*<Box
+            {<Box
                 mt="20px"
                 sx={{
                     display: "flex",
@@ -51,7 +53,7 @@ const Agents = () => {
                         noOfProperties={agent.allProperties.length}
                     />
                 ))}
-            </Box>*/}
+            </Box>}
         </Box>
     );
 };

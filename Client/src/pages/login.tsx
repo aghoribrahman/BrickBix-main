@@ -2,9 +2,11 @@ import { useLogin } from "@refinedev/core";
 import { useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import { Typography, TypographyProps } from '@mui/material';
 import brickbix from '../assets/brick-bix.png';
 import { CredentialResponse } from "../interfaces/google";
+import { keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -15,6 +17,7 @@ export const Login: React.FC = () => {
     const divRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+      document.title = "BrickBix"; 
       if (typeof window === "undefined" || !window.google || !divRef.current) {
         return;
       }
@@ -51,6 +54,32 @@ export const Login: React.FC = () => {
       </Box>
     );
   };
+  
+  const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const AnimatedTypography = ({ children, ...props }: TypographyProps) => (
+  <Typography
+    sx={{
+      fontWeight: 'bold',
+      fontStyle: 'italic',
+      color: 'text.secondary',
+      fontSize: '12px',
+      animation: `${fadeIn} 0.5s ease-in-out`, // Apply the animation here
+    }}
+    {...props}
+  >
+    {children}
+  </Typography>
+);
 
   return (
 
@@ -60,20 +89,25 @@ export const Login: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: 10, // Remove default padding
+        
       }}
     >
       <Box
         display="flex"
-        gap="36px"
+        gap="25px"
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
         sx={{ maxWidth: '90%', textAlign: 'center' }} // Add maxWidth for responsiveness
       >
+        <div>
+          <AnimatedTypography>Exchange Leads</AnimatedTypography>
+          <AnimatedTypography>Platform Crafted For Real Estate Agents</AnimatedTypography>
+        </div>
         <img style={{ maxWidth: '90px', width: '100%' }} src={brickbix} alt="brickbix" />
-          <GoogleButton />
+          <Typography> <GoogleButton /> </Typography>
         <Typography sx={{ fontWeight: 'bold', fontStyle: "italic" }} color={"text.secondary"} fontSize="12px">
+          
           Your Property Solution
         </Typography>
       </Box>

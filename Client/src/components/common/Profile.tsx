@@ -35,9 +35,14 @@ console.log(fullUrlValue)
 
 const Profile = ({ type, name, avatar, email, properties, }: ProfileProps) => (
   <Box>
-      <Typography fontSize={15} fontWeight={700} color="#11142D">
-          {type} Profile
-      </Typography>
+      <Typography 
+                sx={{ fontWeight: "bold", fontSize: '20px' }} 
+                variant="subtitle2" 
+                data-testid="header-user-name"
+            >
+                <span style={{ color: '#d84030' }}>My</span>{' '}
+                <span style={{ color: '#11418a' }}>Profile</span>!
+            </Typography>
 
       <Box mt="20px" borderRadius="15px" padding="20px" bgcolor="#FCFCFC">
           <Box
@@ -122,7 +127,7 @@ const Profile = ({ type, name, avatar, email, properties, }: ProfileProps) => (
                                           fontSize={14}
                                           color="#11142D"
                                       >
-                                          Indore,India
+                                          Indore, India
                                       </Typography>
                                   </Box>
                               </Stack>

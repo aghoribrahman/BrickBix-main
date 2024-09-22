@@ -105,13 +105,15 @@ export const AllProperties = () => {
   return (
     <Box>
       <Stack direction="column" width="100%">
-        <Typography
-          fontSize={{ xs: 20, sm: 25 }}
-          fontWeight={700}
-          color="#11142d"
-        >
-          {!propertyValues.length ? "There are no properties" : "All Properties"}
-        </Typography>
+          <Typography 
+            sx={{ fontWeight: "bold", fontSize: '20px' }} 
+            variant="subtitle2" 
+            data-testid="header-user-name"
+          >
+            <span style={{ color: '#d84030' }}>{!propertyValues.length ? "There are no properties" : "All"}</span>{' '}
+            <span style={{ color: '#11418a' }}>{!propertyValues.length ? "There are no properties" : "Properties"}</span>!
+          </Typography>
+          
         <Box
           mt={1}
           width="100%"
@@ -273,7 +275,7 @@ export const AllProperties = () => {
             disabled={current === 1}
           />
           <Typography>
-            Page {current} of {filteredPageCount}
+            <span style={{ color: '#d84030' }}>Page</span>{' '}  <span style={{ color: '#11418a' }}>{current}</span>
           </Typography>
           <CustomButton
             title="Next"

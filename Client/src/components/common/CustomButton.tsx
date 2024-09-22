@@ -23,9 +23,9 @@ const CustomButton = ({
             minWidth: 100, // Reduced minimum width
             backgroundColor,
             color,
-            fontSize: 14, // Reduced font size
-            fontWeight: 500, // Adjusted font weight for a lighter feel
-            gap: "8px",
+            fontSize: 12, // Reduced font size
+            fontWeight: 600, // Adjusted font weight for a lighter feel
+            gap: "4px",
             textTransform: "capitalize",
             borderRadius: "20px", // More curvy with increased border-radius
             "&:hover": {
