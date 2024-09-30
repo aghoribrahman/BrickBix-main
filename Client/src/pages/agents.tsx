@@ -8,7 +8,7 @@ const Agents = () => {
     const { data, isLoading, isError } = useList({ resource: "users" });
 
     const allAgents = data?.data ?? [];
-
+    console.log(allAgents)
     if (isLoading) 
         return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <Typography>

@@ -8,6 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import Form from '../components/common/Form';
 import { FieldValues } from "react-hook-form";
 import { useParams } from 'react-router-dom';
+import Resizer from "react-image-file-resizer"; 
+
+interface PropertyImage {
+  name: string;
+  url: string;
+}
 
 export const CreateProperty = () => {
   const navigate = useNavigate();
@@ -30,17 +36,32 @@ export const CreateProperty = () => {
   },
 });
 
-  const handleImageChange = (file: File) => {
-    const reader = (readFile: File) =>
-        new Promise<string>((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.onload = () => resolve(fileReader.result as string);
-            fileReader.readAsDataURL(readFile);
-        });
 
-    reader(file).then((result: string) =>
-        setPropertyImage({ name: file?.name, url: result }),
+const resizeImage = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      800, // Max width
+      800, // Max height
+      "JPEG", // Compression format
+      80, // Quality (0-100)
+      0, // Rotation
+      (uri) => { // @ts-ignore
+        resolve(uri); // Resolve with the resized image URI
+      },
+      "base64" // Output type
     );
+  });
+};
+
+// Updated handleImageChange function to include resizing
+const handleImageChange = async (file: File) => {
+  try {
+    const resizedImageUri = await resizeImage(file); // Resize the image
+    setPropertyImage({ name: file.name, url: resizedImageUri }); // Set the resized image
+  } catch (error) {
+    console.error("Error resizing image:", error);
+  }
 };
 
 const onFinishHandler = async (data: FieldValues) => {
