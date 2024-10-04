@@ -110,8 +110,8 @@ export const AllProperties = () => {
             variant="subtitle2" 
             data-testid="header-user-name"
           >
-            <span style={{ color: '#d84030' }}>{!propertyValues.length ? "There are no properties" : "All"}</span>{' '}
-            <span style={{ color: '#11418a' }}>{!propertyValues.length ? "There are no properties" : "Properties"}</span>!
+            <span style={{ color: '#d84030' }}>{!propertyValues.length ? "There are" : "All"}</span>{' '}
+            <span style={{ color: '#11418a' }}>{!propertyValues.length ? "no properties" : "Properties"}</span>!
           </Typography>
           
         <Box
