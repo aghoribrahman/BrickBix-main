@@ -80,7 +80,7 @@ export default function ContactUs() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography 
+          <Typography 
             sx={{ fontWeight: "bold", fontSize: '20px' }} 
             variant="subtitle2" 
             data-testid="header-user-name"

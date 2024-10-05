@@ -41,7 +41,8 @@ const AgentCard = ({
     if (currentUser.email === email) return "/my-profile";
     return `/agents/show/${id}`;
   };
-
+  const queryParams = new URLSearchParams(window.location.search);
+  console.log(queryParams)
   return (
     <Box
       display="flex"

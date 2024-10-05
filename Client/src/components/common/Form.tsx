@@ -33,11 +33,15 @@ const Form = ({
 
   return (
     <Box sx={{ width: { xs: '100%', sm: '80%', md: '60%' }, mx: 'auto' }}>
-      <Typography fontSize={25} fontWeight={700} color="#11142d">
-        {type} a Property
-      </Typography>
-
-      <Box mt={2.5} borderRadius="15px" padding="20px" bgcolor="#fcfcfc">
+        <Typography 
+            sx={{ fontWeight: "bold", fontSize: '20px' }} 
+            variant="subtitle2" 
+            data-testid="header-user-name"
+          >
+            <span style={{ color: '#d84030' }}>{type} a </span>{' '}
+            <span style={{ color: '#11418a' }}>Properties</span>!
+          </Typography>
+      <Box mt={1} borderRadius="15px" padding="20px" bgcolor="#fcfcfc">
         <form
           style={{
             marginTop: "20px",

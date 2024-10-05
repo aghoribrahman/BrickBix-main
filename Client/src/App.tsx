@@ -21,7 +21,7 @@ import {
   ThemedLayoutV2,
 } from "@refinedev/mui";
 import { Sider } from "./components/layout/sider";
-import { Title } from "./components/layout/title";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import routerBindings, {
@@ -56,7 +56,6 @@ import ContactUs from "./pages/contact-us";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import { Footer } from "antd/es/layout/layout";
 import { Link } from "react-router-dom"; // Ensure you import Link
-
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -188,19 +187,15 @@ function App() {
   };
 
   return (
-    
     <BrowserRouter>
       <ThemeProvider theme={theme}>
       <RefineKbarProvider>
-      
         <ColorModeContextProvider>
-        
           <CssBaseline />
           <GlobalStyles styles={{ body: { backgroundColor: '#FCFCFC' } }} />
           <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
           <RefineSnackbarProvider>
             <DevtoolsProvider>
-             
               <Refine
                 
                 dataProvider={dataProvider(`${apiUrl}/api/v1`)}
@@ -291,6 +286,9 @@ function App() {
                     <Route path="/agent">
                       <Route index element={<Agents/>} />
                     </Route>
+                    <Route path="/agents/show/:id">
+                      <Route index element={<Agents/>} />
+                    </Route>
                     <Route path="/exclusive">
                       <Route index element={<ExclusiveProperties/>} />
                     </Route>
@@ -334,7 +332,6 @@ function App() {
             </Link>
           </Footer>
         </ColorModeContextProvider>
-        
       </RefineKbarProvider>
       </ThemeProvider>
     </BrowserRouter>

@@ -80,9 +80,14 @@ const RequirementDetails = () => {
 
   return (
     <Box borderRadius="15px" padding="20px" bgcolor="#FCFCFC" width="fit-content">
-      <Typography fontSize={25} fontWeight={700} color="#11142D">
-        Details
-      </Typography>
+          <Typography 
+            sx={{ fontWeight: "bold", fontSize: '20px', marginBottom: '10px' }} 
+            variant="subtitle2" 
+            data-testid="header-user-name"
+          >
+            <span style={{ color: '#d84030' }}>Requirement</span>{' '}
+            <span style={{ color: '#11418a' }}>Details</span>
+          </Typography>
 
       <Grid container spacing={4}>
         {/* Property Details Section */}
