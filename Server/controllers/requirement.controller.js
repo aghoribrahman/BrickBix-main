@@ -41,7 +41,8 @@ const getAllRequirements = async (req, res) => {
     const requirements = await RequirementModel.find(query)
     .sort({ [_sort]: _order })  // Sort the documents by `_sort` field in `_order` direction
     .skip(start)   // Skip the first `start` items
-    .limit(limit); // Limit the result to `limit` items
+    .limit(limit)// Limit the result to `limit` items
+    .lean(); 
 
     // Set response headers to include the total count
     res.header("x-total-count", count);
