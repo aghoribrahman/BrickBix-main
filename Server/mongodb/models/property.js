@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const PropertySchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String, required: true, index: true },
   description: { type: String, required: true },
-  propertyType: { type: String, required: true },
+  propertyType: { type: String, required: true, index: true },
   dealType: { type: String, required: true },
-  location: { type: String, required: true },
+  location: { type: String, required: true, index: true },
   price: { type: Number, required: true },
   totalSquareFeet: { type: Number, required: true },
   phone: { type: Number, required: true },

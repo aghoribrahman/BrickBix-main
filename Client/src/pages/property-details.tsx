@@ -58,9 +58,14 @@ const PropertyDetails = () => {
 
   return (
     <Box padding={{ xs: "10px", sm: "20px" }} bgcolor="#FCFCFC" borderRadius="15px" width="100%">
-      <Typography fontSize={25} fontWeight={700} color="#11142D" textAlign="center" mb={3}>
-        Property Details
-      </Typography>
+          <Typography 
+            sx={{ fontWeight: "bold", fontSize: '20px', marginBottom: '10px' }} 
+            variant="subtitle2" 
+            data-testid="header-user-name"
+          >
+            <span style={{ color: '#d84030' }}>Property</span>{' '}
+            <span style={{ color: '#11418a' }}>Details</span>
+          </Typography>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

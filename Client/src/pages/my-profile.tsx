@@ -1,5 +1,6 @@
 import { useGetIdentity, useOne } from "@refinedev/core";
 import Profile from "../components/common/Profile";
+import { useParams } from 'react-router-dom';
 import { useActiveAuthProvider } from "@refinedev/core";
 import { CircularProgress } from "@mui/material";
 
@@ -12,7 +13,8 @@ const MyProfile = () => {
     resource: "users",
     id: user?.userid,
   });
-
+  const queryParams = new URLSearchParams(window.location.search);
+  console.log(queryParams)
   const myProfile = data?.data ?? {};
 
 

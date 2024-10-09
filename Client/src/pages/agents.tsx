@@ -1,4 +1,5 @@
 import { useList } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
@@ -6,9 +7,24 @@ import AgentCard from "../components/agent/AgentCard";
 
 const Agents = () => {
     const { data, isLoading, isError } = useList({ resource: "users" });
-
+    const [cachedAgents, setCachedAgents] = useState([]);
     const allAgents = data?.data ?? [];
-    console.log(allAgents)
+
+    useEffect(() => {
+        if (allAgents.length > 0) {
+            localStorage.setItem("agents", JSON.stringify(allAgents));
+        }
+    }, [allAgents]);
+
+    // Load cached agents if API call fails
+    useEffect(() => {
+        const cachedData = localStorage.getItem("agents");
+        if (cachedData) {
+            setCachedAgents(JSON.parse(cachedData));
+        }
+    }, [isError]);
+
+
     if (isLoading) 
         return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <Typography>

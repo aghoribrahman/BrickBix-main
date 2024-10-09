@@ -99,13 +99,13 @@ const Requirement = () => {
   return (
     <Box>
       <Stack direction="column" width="100%">
-      <Typography 
+          <Typography 
             sx={{ fontWeight: "bold", fontSize: '20px' }} 
             variant="subtitle2" 
             data-testid="header-user-name"
           >
-            <span style={{ color: '#d84030' }}>{!requirementValues.length ? "There are no properties" : "All"}</span>{' '}
-            <span style={{ color: '#11418a' }}>{!requirementValues.length ? "There are no properties" : "Requirement"}</span>!
+            <span style={{ color: '#d84030' }}>{!requirementValues.length ? "There are" : "All"}</span>{' '}
+            <span style={{ color: '#11418a' }}>{!requirementValues.length ? "no requirements" : "Requirement"}</span>!
           </Typography>
         <Box
           mt={1}
