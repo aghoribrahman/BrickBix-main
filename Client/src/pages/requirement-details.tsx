@@ -141,7 +141,7 @@ const RequirementDetails = () => {
 
                 <Box>
                   <Typography fontSize={16} fontWeight={600} mt="10px" color="#11142D">
-                    Price
+                    Budget
                   </Typography>
                   <Stack direction="row" alignItems="flex-end" gap={1}>
                   <Typography fontSize={14} fontWeight={600} color="#0F52BA">

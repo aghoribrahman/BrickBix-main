@@ -41,14 +41,14 @@ const Agents = () => {
                 data-testid="header-user-name"
             >
                 <span style={{ color: '#d84030' }}>Agent</span>{' '}
-                <span style={{ color: '#11418a' }}>List</span>!
+                <span style={{ color: '#11418a' }}>List</span>! 
             </Typography>
+            
             <Box
             display="flex"
             alignItems="center"
             justifyContent="center"
-        >
-            
+        >   
             </Box>
             {<Box
                 mt="20px"

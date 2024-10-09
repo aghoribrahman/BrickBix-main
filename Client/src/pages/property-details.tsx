@@ -107,7 +107,7 @@ const PropertyDetails = () => {
 
                 <Box display="flex" flexDirection="column" alignItems="center">
                   <Typography fontSize={16} fontWeight={600} color="#11142D">
-                    Total Price
+                    Price
                   </Typography>
                   <Typography fontSize={14} fontWeight={600} color="#0F52BA">
                     ₹ {new Intl.NumberFormat('en-IN').format(parseFloat(//@ts-ignore
@@ -136,13 +136,19 @@ const PropertyDetails = () => {
                 {//@ts-ignore
                 propertyInfo.phone}
               </Typography>
-
               <Typography fontSize={18} color="#11142D" mt={3}>
                 Deal Type
               </Typography>
               <Typography fontSize={14} color="#808191">
                 {//@ts-ignore
                 propertyInfo.dealType}
+              </Typography>
+              <Typography fontSize={18} color="#11142D" mt={3}>
+                Date of Posting
+              </Typography>
+              <Typography fontSize={14} color="#808191">
+                {//@ts-ignore
+                propertyInfo.createdAt.substring(0, 10)}
               </Typography>
             </Box>
           </Box>
