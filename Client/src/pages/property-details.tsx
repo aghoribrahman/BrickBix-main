@@ -231,8 +231,15 @@ const PropertyDetails = () => {
                           alt="WhatsApp"
                           style={{ width: "24px", height: "24px" }}
                         />
-                      }//@ts-ignore
-                      handleClick={() => window.open(`https://wa.me/${propertyInfo.phone}`, "_blank")}
+                      }
+                      
+                      handleClick={() => {
+                        const currentUrl = window.location.href; // Get current URL
+                        const message = `Hello, I'am interested in the property listed on BrickBix. Can you provide more details? Here's the link: ${currentUrl}`;
+                        //@ts-ignore
+                        const phoneNumber = `+91${propertyInfo.phone}`;
+                        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+                      }}
                     />
                     <CustomButton
                       title="Call"

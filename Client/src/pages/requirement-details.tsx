@@ -268,9 +268,19 @@ const RequirementDetails = () => {
                       backgroundColor="#25D366" // WhatsApp green color
                       color="#FCFCFC"
                       fullWidth
-                      icon={<img src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/whatsapp.svg" alt="WhatsApp" style={{ width: '24px', height: '24px' }} />}
-                      handleClick={() => {//@ts-ignore
-                        window.open(`https://wa.me/${propertyInfo.phone}`, '_blank');
+                      icon={
+                        <img
+                          src="https://cdn.jsdelivr.net/npm/simple-icons@v8/icons/whatsapp.svg"
+                          alt="WhatsApp"
+                          style={{ width: '24px', height: '24px' }}
+                        />
+                      }
+                      handleClick={() => {
+                        const currentUrl = window.location.href; // Get current URL
+                        const message = `Hello, I'm interested in the requirement listed on BrickBix. Here is the link to the requirement: ${currentUrl}`;
+                        //@ts-ignore
+                        const phoneNumber = `+91${propertyInfo.phone}`;
+                        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
                       }}
                     />
                     <CustomButton
