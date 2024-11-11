@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   AuthBindings,
   Authenticated,
@@ -26,7 +27,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import routerBindings, {
   CatchAllNavigate,
-  DocumentTitleHandler,
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
@@ -185,6 +185,9 @@ function App() {
       return null;
     },
   };
+  useEffect(() => {
+    document.title = "BrickBix"; // Set the document title
+  }, []);
 
   return (
     <BrowserRouter>
@@ -261,7 +264,7 @@ function App() {
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >    
-                      <ThemeProvider theme={theme}>                  
+                      <ThemeProvider theme={theme}>           
                         <ThemedLayoutV2 Title={() => <div><span>BrickBix</span></div>} Header={() => <Header sticky />} Sider={()=><Sider />} >
                           <Outlet />
                         </ThemedLayoutV2>
@@ -316,14 +319,10 @@ function App() {
                     <Route path="/login" element={<Login />} />
                   </Route>
                 </Routes>
-
                 <RefineKbar />
                 <UnsavedChangesNotifier />
-                <DocumentTitleHandler />
               </Refine>
-              
             </DevtoolsProvider>
-           
           </RefineSnackbarProvider>
           <Footer style={{ textAlign: 'center' }}>
             © 2024 BrickBix Technologies. All rights reserved. | 

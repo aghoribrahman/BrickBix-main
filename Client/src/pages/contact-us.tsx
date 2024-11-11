@@ -36,7 +36,7 @@ export default function ContactUs() {
     setIsSubmitting(true); // Disable the button
 
     try {
-      const response = await fetch('https://formbold.com/s/oPgNM', {
+      const response = await fetch('https://formbold.com/s/6MbX5', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

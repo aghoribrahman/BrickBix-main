@@ -12,6 +12,7 @@ import PropertyCard from "../components/common/PropertyCard";
 import CustomButton from "../components/common/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { Add } from "@mui/icons-material";
+import Service from "../components/common/Services";
 
 const Home = () => {
   const authProvider = useActiveAuthProvider();
@@ -30,6 +31,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = "BrickBix"; 
     const fetchData = async () => {
       try {
         const [propertiesRes, requirementsRes] = await Promise.all([
@@ -211,7 +213,7 @@ const Home = () => {
         <PieChart
           title="Total Properties"
           value={totalPropertiesCount}
-          series={[totalPropertiesCount, 100 - totalPropertiesCount]}
+          series={[totalPropertiesCount, 1000 - totalPropertiesCount]}
           colors={["#275be8", "#c4e8ef"]}
         />
         <PieChart
@@ -223,17 +225,17 @@ const Home = () => {
         <PieChart
           title="Apartments"
           value={apartmentPropertiesCount}
-          series={[apartmentPropertiesCount, 100 - apartmentPropertiesCount]}
+          series={[apartmentPropertiesCount, 500 - apartmentPropertiesCount]}
           colors={["#275be8", "#c4e8ef"]}
         />
         <PieChart
           title="Requirements Listed"
           value={totalRequirementsCount}
-          series={[totalRequirementsCount, 100 - totalRequirementsCount]}
+          series={[totalRequirementsCount, 1000 - totalRequirementsCount]}
           colors={["#275be8", "#c4e8ef"]}
         />
       </Box>
-
+      <Service />
       <Stack
         mt="25px"
         width="100%"

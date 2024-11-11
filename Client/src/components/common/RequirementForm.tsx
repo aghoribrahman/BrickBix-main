@@ -182,7 +182,12 @@ const RequirementForm = ({
                 color="info"
                 type="number"
                 variant="outlined"
-                {...register("askedPrice", { required: true })}
+                {...register("askedPrice", { 
+                  required: "Budget is required", 
+                  min: { value: 0, message: "Budget must be a positive number" },
+                  max: { value: 1000000000, message: "Budget cannot exceed 1,000,000,000" },
+                  pattern: { value: /^\d+$/, message: "Please enter a valid number" }
+                })}
               />
             </FormControl>
           </Stack>
