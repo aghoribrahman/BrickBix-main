@@ -22,6 +22,8 @@
     "antd": "^5.16.2",
     "apexcharts": "^3.48.0",
     "axios": "^1.6.2",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.462.0",
     "query-string": "^7.1.1",
     "react": "^18.0.0",
     "react-apexcharts": "^1.4.1",
@@ -30,7 +32,8 @@
     "react-image-file-resizer": "^0.4.8",
     "react-router-dom": "^6.8.1",
     "refine": "^0.0.1-alpha",
-    "swizzle": "^1.1.0"
+    "swizzle": "^1.1.0",
+    "tailwindcss": "^3.4.16"
   },
   "devDependencies": {
     "@types/node": "^18.16.2",

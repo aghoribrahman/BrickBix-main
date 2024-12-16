@@ -6,12 +6,22 @@ import connectDB from "./mongodb/connect.js";
 import userRouter from "./routes/user.routes.js";
 import propertyRouter from "./routes/property.routes.js";
 import requirementRouter from "./routes/requirement.routes.js";
+import helmet from "helmet";
 
 dotenv.config();
+
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    frameAncestors: ["'self'", "https://accounts.google.com"],
+    scriptSrc: ["'self'", "https://apis.google.com"],
+    // Add other directives as needed
+  },
+}));
 
 app.get("/", (req, res) => {
   res.send({ message: "Hello From BrickBix!" });

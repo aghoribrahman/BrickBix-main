@@ -25,12 +25,12 @@ const PropertyCard = ({
       component={Link}
       to={`/${url}/show/${id}`}
       sx={{
-        maxWidth: "330px",
+        maxWidth: { xs: "100%", md: "330px" }, // Adjusted for mobile responsiveness
         width: "100%", // Make the card responsive
         cursor: "pointer",
         textDecoration: "none",
-        backgroundColor: "#f2f2f2",
-        borderRadius: "10px",
+        backgroundColor: "#f9f9f9",
+        borderRadius: "16px",
         position: "relative", // Ensure relative positioning for absolute positioning of tag
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow for depth
         transition: "transform 0.2s, box-shadow 0.2s", // Smooth transition for hover effect
@@ -67,7 +67,7 @@ const PropertyCard = ({
       <CardContent
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: { xs: "column", md: "row" }, // Adjusted for mobile responsiveness
           justifyContent: "space-between",
           gap: "10px",
           paddingX: "5px",
@@ -78,41 +78,40 @@ const PropertyCard = ({
             sx={{ textDecoration: "none" }}
             fontSize={16}
             marginLeft={"5px"}
-            fontWeight={500}
+            fontWeight={600}
             color="#11142d"
           >
             {title}
           </Typography>
-          <Stack direction="row" gap={0.5} alignItems="flex-start">
-            <Place
-              sx={{
-                fontSize: 18,
-                color: "#11142d",
-                marginTop: 0.5,
-                textDecoration: "none",
-              }}
-            />
-            <Typography
-              sx={{ textDecoration: "none" }}
-              fontSize={14}
-              color="#808191"
-            >
-              Location: {location}
-            </Typography>
-          </Stack>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+              <Place sx={{ fontSize: 20, color: "#1976d2" }} />
+              <Typography
+                variant="body2"
+                color="#808191"
+                fontWeight={500}
+                sx={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}
+              >
+                {location}
+              </Typography>
+            </Stack>
         </Stack>
 
         <Box
           px={1.5}
           py={0.5}
-          borderRadius={1}
-          bgcolor="#dadefa"
+          borderRadius={4}
+          bgcolor="#E5E4E2"
           height="fit-content"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={1} // Added gap for margin between elements
         >
-          <Typography fontSize={14} fontWeight={600} color="#0F52BA">
+          <Typography fontSize={13} fontWeight={600} color="#0F52BA" textAlign="center">
             ₹ {new Intl.NumberFormat("en-IN").format(parseFloat(price))}/-
           </Typography>
-          <Typography fontSize={14} fontWeight={600}>
+          <Typography fontSize={16} fontWeight={600} textAlign="center">
             {propertyType}
           </Typography>
         </Box>

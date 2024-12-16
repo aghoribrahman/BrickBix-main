@@ -131,7 +131,7 @@ const Requirement = () => {
                 fontSize: "14px", // Smaller font size
               },
               "& .MuiOutlinedInput-root": {
-                borderRadius: "4px", // Optional: adjust border radius if needed
+                borderRadius: "12px", // Adjusted border radius to 12 pixels
               }
             }}
           />
@@ -143,6 +143,7 @@ const Requirement = () => {
               mt: 2,
               width: { xs: "100%", sm: "auto" },
               backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Custom color for secondary state
+              borderRadius: "20px", // Added border radius
               '&:hover': {
                 backgroundColor: showFilters ? "#FF5733" : "#0F52BA", // Optional hover color
               }
@@ -266,7 +267,10 @@ const Requirement = () => {
           >
             <CustomButton
               title="Previous"
-              handleClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} // Prevent going below 1
+              handleClick={() => {
+                setCurrent((prev) => Math.max(prev - 1, 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} // Prevent going below 1
               backgroundColor="#0F52BA"
               color="#fcfcfc"
               disabled={current === 1}
@@ -276,7 +280,10 @@ const Requirement = () => {
             </Typography>
             <CustomButton
               title="Next"
-              handleClick={() => setCurrent((prev) => Math.min(prev + 1, filteredPageCount))} // Prevent going above filteredPageCount
+              handleClick={() => {
+                setCurrent((prev) => Math.min(prev + 1, filteredPageCount));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} // Prevent going above filteredPageCount
               backgroundColor="#0F52BA"
               color="#fcfcfc"
               disabled={current === filteredPageCount || requirementValues.length < pageSize}

@@ -1,13 +1,26 @@
+declare global {
+  interface Window {
+    google: {
+      accounts: {
+        id: {
+          initialize: (input: any) => void;
+          renderButton: (element: HTMLElement, options: any) => void;
+        };
+      };
+    };
+  }
+}
+
 import { useLogin } from "@refinedev/core";
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 import { CredentialResponse } from "../interfaces/google";
-import brickbix from '../assets/brick-bix.png';
-import animation1 from '../assets/Gif/animation 1.gif';
-import animation2 from '../assets/Gif/Animation 2.gif';
-import animation3 from '../assets/Gif/Animation 3.gif';
+import brickbix from "../assets/brick-bix.png";
+import animation1 from "../assets/Gif/animation 1.gif";
+import animation2 from "../assets/Gif/Animation 2.gif";
+import animation3 from "../assets/Gif/Animation 3.gif";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -15,10 +28,8 @@ const GoogleButton: React.FC<{ onLogin: (res: CredentialResponse) => void }> = (
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = "BrickBix"; 
-    if (typeof window === "undefined" || !window.google || !divRef.current) {
-      return;
-    }
+    document.title = "BrickBix";
+    if (!window.google || !divRef.current) return;
 
     try {
       window.google.accounts.id.initialize({
@@ -27,6 +38,8 @@ const GoogleButton: React.FC<{ onLogin: (res: CredentialResponse) => void }> = (
         callback: async (res: CredentialResponse) => {
           if (res.credential) {
             onLogin(res);
+          } else {
+            console.error("Google Sign-In failed: No credentials received");
           }
         },
       });
@@ -36,18 +49,18 @@ const GoogleButton: React.FC<{ onLogin: (res: CredentialResponse) => void }> = (
         type: "standard",
       });
     } catch (error) {
-      console.error(error);
+      console.error("Google Sign-In Initialization Error:", error);
     }
   }, [onLogin]);
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" width="100%">
-      <div ref={divRef} style={{ width: '100%', textAlign: 'center' }} />
+      <div ref={divRef} style={{ width: "100%", textAlign: "center" }} />
     </Box>
   );
 };
 
-const LoginCarousel: React.FC<{ images: string[], captions: string[] }> = ({ images, captions }) => {
+const LoginCarousel: React.FC<{ images: string[]; captions: string[] }> = ({ images, captions }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -57,8 +70,8 @@ const LoginCarousel: React.FC<{ images: string[], captions: string[] }> = ({ ima
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
         setFade(true); // Start fade-in
-      }, 500); // Delay for caption transition
-    }, 3000); // Change caption every 3 seconds
+      }, 500); // Wait for fade-out to complete
+    }, 3000); // Rotate every 3 seconds
 
     return () => clearInterval(interval);
   }, [images.length]);
@@ -67,36 +80,44 @@ const LoginCarousel: React.FC<{ images: string[], captions: string[] }> = ({ ima
     <Box>
       <Typography
         sx={{
-          position: 'absolute',
+          position: "absolute",
           top: "24%",
-          left: '50%',
-          transform: 'translateX(-50%)',
-          color: 'grey.700',
-          fontWeight: 'bold',
-          fontStyle: 'italic',
-          fontSize: '16px',
+          left: "50%",
+          transform: "translateX(-50%)",
+          fontWeight: "bold",
+          fontStyle: "italic",
+          fontSize: "16px",
           zIndex: 10,
-          whiteSpace: 'nowrap',
-          opacity: fade ? 1 : 0, // Fade effect
-          transition: 'opacity 0.5s ease-in-out', // Transition for fade-in and fade-out
+          opacity: fade ? 1 : 0,
+          transition: "opacity 0.5s ease-in-out",
+          whiteSpace: "nowrap",
         }}
+        color="text.secondary"
       >
         {captions[currentIndex]}
       </Typography>
-      <Box sx={{ position: 'relative', width: '90px', height: '90px', overflow: 'hidden', borderRadius: '15px' }}>
+      <Box
+        sx={{
+          position: "relative",
+          width: "90px",
+          height: "90px",
+          overflow: "hidden",
+          borderRadius: "15px",
+        }}
+      >
         {images.map((image, index) => (
           <img
             key={index}
             src={image}
             alt={`Animation ${index + 1}`}
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: `${(index - currentIndex) * 100}%`,
-              transition: 'left 1s ease-in-out',
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
+              transition: "left 1s ease-in-out",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
             }}
           />
         ))}
@@ -108,11 +129,7 @@ const LoginCarousel: React.FC<{ images: string[], captions: string[] }> = ({ ima
 export const Login: React.FC = () => {
   const { mutate: login } = useLogin<CredentialResponse>();
 
-  const captions = [
-    "Explore Properties",
-    "Manage Inventories",
-    "Close Deal Faster"
-  ];
+  const captions = ["Explore Properties", "Manage Inventories", "Close Deal Faster"];
 
   return (
     <Container
@@ -121,17 +138,23 @@ export const Login: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        position: 'relative'
+        position: "relative",
       }}
     >
-      <Box sx={{
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        width: '50px',
-        height: '50px',
-      }}>
-        <img src={brickbix} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+      <Box
+        sx={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          width: "50px",
+          height: "50px",
+        }}
+      >
+        <img
+          src={brickbix}
+          alt="Logo"
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
       </Box>
 
       <Box
@@ -140,19 +163,27 @@ export const Login: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
-        sx={{ maxWidth: '90%', textAlign: 'center' }}
+        sx={{ maxWidth: "90%", textAlign: "center" }}
       >
-        <LoginCarousel 
-          images={[animation1, animation2, animation3]}
-          captions={captions}
-        />
+        <LoginCarousel images={[animation1, animation2, animation3]} captions={captions} />
 
         <GoogleButton onLogin={login} />
-        
-        <Typography sx={{ fontWeight: 'bold', fontStyle: "italic" }} color={"text.secondary"} fontSize="12px">
-          BrickBix Your Property Solution
-          <p>Crafted for real estate agents</p>
-        </Typography>
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          <Typography sx={{ fontWeight: "bold", fontStyle: "italic" }} color="text.secondary" fontSize="12px">
+            BrickBix Your Property Solution
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "12px",
+              fontStyle: "italic",
+              fontWeight: "bold",
+              color: "text.secondary",
+            }}
+          >
+            Crafted for real estate agents
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );

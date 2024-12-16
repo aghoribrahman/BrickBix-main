@@ -13,54 +13,94 @@ import CustomButton from "../components/common/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { Add } from "@mui/icons-material";
 import Service from "../components/common/Services";
+import UserForm from "../components/common/UserForm";
+import Dialog from "@mui/material/Dialog";
+import { motion } from "framer-motion";
+
+interface Property {
+  _id: string;
+  title: string;
+  location: string;
+  dealType: string;
+  price: number;
+  photo: string;
+  phone: string;
+  propertyType: string;
+}
+
+interface Requirement {
+  _id: string;
+  title: string;
+  location: string;
+  dealType: string;
+  askedPrice: number;
+  phone: string;
+  propertyType: string;
+}
+
+interface UserInfo {
+  name: string;
+  phoneNumber: string;
+  workLocation: string;
+}
 
 const Home = () => {
   const authProvider = useActiveAuthProvider();
   const { data: user } = useGetIdentity({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const [myProperties, setMyProperties] = useState([]);
-  const [requirements, setRequirements] = useState([]);
+
+  const [myProperties, setMyProperties] = useState<Property[]>([]);
+  const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [totalPropertiesCount, setTotalPropertiesCount] = useState(0);
   const [commercialPropertiesCount, setCommercialPropertiesCount] = useState(0);
   const [apartmentPropertiesCount, setApartmentPropertiesCount] = useState(0);
   const [totalRequirementsCount, setTotalRequirementsCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const userId = user?.id || user?.userid || null; // Adjust according to the actual field
 
+  console.log(userId)
   useEffect(() => {
-    document.title = "BrickBix"; 
-    const fetchData = async () => {
-      try {
-        const [propertiesRes, requirementsRes] = await Promise.all([
-          fetch(`${apiUrl}/api/v1/properties/five`),
-          fetch(`${apiUrl}/api/v1/requirement/five`)
-        ]);
+    if (userId) {
+      document.title = "BrickBix"; 
+      const fetchData = async () => {
+        try {
+          const [propertiesRes, requirementsRes, userInfoRes] = await Promise.all([
+            fetch(`${apiUrl}/api/v1/properties/five`),
+            fetch(`${apiUrl}/api/v1/requirement/five`),
+            fetch(`${apiUrl}/api/v1/users/${userId}`)
+          ]);
 
-        if (!propertiesRes.ok || !requirementsRes.ok) {
-          throw new Error("Failed to fetch properties or requirements");
+          if (!propertiesRes.ok || !requirementsRes.ok) {
+            throw new Error("Failed to fetch properties or requirements");
+          }
+
+          const propertiesData = await propertiesRes.json();
+          const requirementsData = await requirementsRes.json();
+          const userInfoData = await userInfoRes.json();
+          setUserInfo(userInfoData)
+          setMyProperties(propertiesData.properties);
+          setRequirements(requirementsData.requirements);
+          setTotalPropertiesCount(propertiesData.totalPropertiesCount);
+          setCommercialPropertiesCount(propertiesData.commercialPropertiesCount);
+          setApartmentPropertiesCount(propertiesData.apartmentPropertiesCount);
+          setTotalRequirementsCount(requirementsData.totalRequirementsCount);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          setLoading(false);
         }
+      };
 
-        const propertiesData = await propertiesRes.json();
-        const requirementsData = await requirementsRes.json();
-
-        setMyProperties(propertiesData.properties);
-        setRequirements(requirementsData.requirements);
-        setTotalPropertiesCount(propertiesData.totalPropertiesCount);
-        setCommercialPropertiesCount(propertiesData.commercialPropertiesCount);
-        setApartmentPropertiesCount(propertiesData.apartmentPropertiesCount);
-        setTotalRequirementsCount(requirementsData.totalRequirementsCount);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [apiUrl]);
+      fetchData();
+    }
+  }, [userId]);
 
   const userNameDisplay = useMemo(() => (
     user?.name ? (
@@ -76,6 +116,20 @@ const Home = () => {
   ), [user?.name]);
   
   
+
+
+  const isUserInfoComplete = userInfo && userInfo.phoneNumber && userInfo.workLocation;
+
+  const handleFormSubmit = (success: boolean) => {
+    if (success) {
+      setFormSubmitted(true);
+      setShowThankYou(true);
+      // Hide thank you message after 3 seconds
+      setTimeout(() => {
+        setShowThankYou(false);
+      }, 3000);
+    }
+  };
 
   return (
     <Box sx={{ padding: '10px' }}>
@@ -96,11 +150,47 @@ const Home = () => {
           icon={<Add />}
         />
       </Stack>
-
+      {!isUserInfoComplete && !formSubmitted && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1 }}
+          style={{ borderRadius: '20px' }}
+        >
+          <Dialog open={!isUserInfoComplete && !formSubmitted} PaperProps={{ style: { borderRadius: '20px' } }}>
+            <UserForm 
+              name={user?.name} 
+              email={user?.email} 
+              onFormSubmit={handleFormSubmit}
+            />
+          </Dialog>
+        </motion.div>
+      )}
+      {showThankYou && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+        >
+          <Typography 
+            variant="h6" 
+            color="success.main" 
+            sx={{ 
+              mt: 2, 
+              textAlign: 'center',
+              padding: '20px',
+              backgroundColor: '#e8f5e9',
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}
+          >
+            Thank you for submitting your information!
+          </Typography>
+        </motion.div>
+      )}
       <Box
         flex={1}
         borderRadius="15px"
-        padding="20px"
         bgcolor="#F6F5F2"
         display="flex"
         justifyContent="center"
@@ -156,7 +246,6 @@ const Home = () => {
       <Box
         flex={1}
         borderRadius="15px"
-        padding="20px"
         bgcolor="#F6F5F2"
         display="flex"
         justifyContent="center"
@@ -245,6 +334,7 @@ const Home = () => {
         <TotalRevenue />
         <PropertyReferrals />
       </Stack>
+      
     </Box>
   );
 };

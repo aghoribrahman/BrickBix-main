@@ -87,104 +87,125 @@ const theme = createTheme({
 
 function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const authProvider: AuthBindings = {
-    login: async ({ credential }: CredentialResponse) => {
-      const profileObj = credential ? parseJwt(credential) : null;
-      
-      if (profileObj) {
-        const response = await fetch(
-            `${apiUrl}/api/v1/users`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: profileObj.name,
-                    email: profileObj.email,
-                    avatar: profileObj.picture,
-                }),
-            },
-        );
+
+    // Utility function to parse JWT token
+    const parseJwt = (token: string) => {
+      try {
+        return JSON.parse(atob(token.split(".")[1]));
+      } catch (error) {
+        console.error("Error parsing JWT", error);
+        return null;
+      }
+    };
+
+    // Utility function for API requests
+    const apiRequest = async (url: string, options: RequestInit) => {
+      try {
+        const response = await fetch(url, options);
         const data = await response.json();
-        if (response.status === 200) {
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              ...profileObj,
-              avatar: profileObj.picture,
-              userid: data._id,
-            })
-          );
+
+        if (!response.ok) {
+          throw new Error(data?.message || "API request failed");
         }
-        else {
-          return Promise.reject();
+
+        return data;
+      } catch (error) {
+        console.error("API Request Error:", error);
+        throw error;
       }
-      
-        
+    };
 
-        localStorage.setItem("token", `${credential}`);
+    // Authentication bindings
+    const authProvider: AuthBindings = {
+      login: async ({ credential }: CredentialResponse) => {
+        if (!credential) {
+          console.error("Login failed: No credential provided");
+          return { success: false };
+        }
 
-        return {
-          success: true,
-          redirectTo: "/",
-        };
-      }
+        const profileObj = parseJwt(credential);
 
-      return {
-        success: false,
-      };
-        
+        if (!profileObj) {
+          console.error("Login failed: Invalid JWT");
+          return { success: false };
+        }
+
+        try {
+          // API call to save user information
+          const data = await apiRequest(`${apiUrl}/api/v1/users`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: profileObj.name,
+              email: profileObj.email,
+              avatar: profileObj.picture,
+            }),
+          });
+
+          // Save user and token in local storage
+          localStorage.setItem("user", JSON.stringify({ ...profileObj, userid: data._id }));
+          localStorage.setItem("token", credential);
+
+          return { success: true, redirectTo: "/" };
+        } catch (error) {
+          console.error("Login error:", error);
+          return { success: false };
+        }
       },
-    
-    logout: async () => {
-      const token = localStorage.getItem("token");
 
-      if (token && typeof window !== "undefined") {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        axios.defaults.headers.common = {};
-        window.google?.accounts.id.revoke(token, () => {
-          return {};
-        });
-      }
+      logout: async () => {
+        const token = localStorage.getItem("token");
 
-      return {
-        success: true,
-        redirectTo: "/login",
-      };
-    },
-    onError: async (error) => {
-      console.error(error);
-      return { error };
-    },
-    check: async () => {
-      const token = localStorage.getItem("token");
+        if (token && typeof window !== "undefined") {
+          try {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            axios.defaults.headers.common = {}; // Clear axios headers
+            if (window.google?.accounts.id) {
+              window.google.accounts.id.revoke(token, () => {
+                console.log("Token revoked");
+              });
+            }
+          } catch (error) {
+            console.error("Logout error:", error);
+          }
+        }
 
-      if (token) {
+        return { success: true, redirectTo: "/login" };
+      },
+
+      check: async () => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          // Optionally: Add token verification logic here if necessary
+          return { authenticated: true };
+        }
+
         return {
-          authenticated: true,
+          authenticated: false,
+          error: {
+            message: "Authentication failed: Token not found",
+            name: "AuthError",
+          },
+          logout: true,
+          redirectTo: "/login",
         };
-      }
+      },
 
-      return {
-        authenticated: false,
-        error: {
-          message: "Check failed",
-          name: "Token not found",
-        },
-        logout: true,
-        redirectTo: "/login",
-      };
-    },
-    getPermissions: async () => null,
-    getIdentity: async () => {
-      const user = localStorage.getItem("user");
-      if (user) {
-        return JSON.parse(user);
-      }
+      getIdentity: async () => {
+        const user = localStorage.getItem("user");
+        return user ? JSON.parse(user) : null;
+      },
 
-      return null;
-    },
-  };
+      getPermissions: async () => null,
+
+      onError: async (error) => {
+        console.error("Auth error:", error);
+        return { error };
+      },
+    };
+
   useEffect(() => {
     document.title = "BrickBix"; // Set the document title
   }, []);
