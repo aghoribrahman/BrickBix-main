@@ -66,19 +66,19 @@ const Service = () => {
                             <Button
                                 size="small"
                                 variant="contained"
-                                style={{ backgroundColor: '#11418a', color: '#ffffff' }} // WhatsApp button color
+                                style={{ backgroundColor: '#11418a', color: '#ffffff', borderRadius: '20px', padding: '5px 15px' }} // WhatsApp button color and padding
                                 onClick={() => window.open(`https://wa.me/${service.whatsappNumber}?text=${encodeURIComponent(service.message)}`, '_blank')}
                             >
                                 WhatsApp
                             </Button>
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    style={{ backgroundColor: '#d84030', color: '#ffffff' }} // Call button color
-                                    onClick={() => window.location.href = `tel:${service.phoneNumber}`}
-                                >
-                                    Call
-                                </Button>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                style={{ backgroundColor: '#d84030', color: '#ffffff', borderRadius: '20px', padding: '5px 15px' }} // Call button color, border radius, and padding
+                                onClick={() => window.location.href = `tel:${service.phoneNumber}`}
+                            >
+                                Call
+                            </Button>
                             </CardActions>
                         </StyledCard>
                     </Grid>

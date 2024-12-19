@@ -14,7 +14,7 @@ const MyProfile = () => {
     id: user?.userid,
   });
   const queryParams = new URLSearchParams(window.location.search);
-  console.log(queryParams)
+ 
   const myProfile = data?.data ?? {};
 
 

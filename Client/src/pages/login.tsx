@@ -10,7 +10,6 @@ declare global {
     };
   }
 }
-
 import { useLogin } from "@refinedev/core";
 import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
@@ -47,6 +46,7 @@ const GoogleButton: React.FC<{ onLogin: (res: CredentialResponse) => void }> = (
         theme: "filled_blue",
         size: "medium",
         type: "standard",
+        width:250,
       });
     } catch (error) {
       console.error("Google Sign-In Initialization Error:", error);
@@ -54,8 +54,8 @@ const GoogleButton: React.FC<{ onLogin: (res: CredentialResponse) => void }> = (
   }, [onLogin]);
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" width="100%">
-      <div ref={divRef} style={{ width: "100%", textAlign: "center" }} />
+    <Box display="flex" justifyContent="center" alignItems="center" width={{ xs: "100%", md: "100%" }}>
+      <div ref={divRef} style={{ width: "100%", textAlign: "center", height:"100%" }} />
     </Box>
   );
 };

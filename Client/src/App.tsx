@@ -67,6 +67,8 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -155,14 +157,14 @@ function App() {
 
       logout: async () => {
         const token = localStorage.getItem("token");
-
+      
         if (token && typeof window !== "undefined") {
           try {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             axios.defaults.headers.common = {}; // Clear axios headers
-            if (window.google?.accounts.id) {
-              window.google.accounts.id.revoke(token, () => {
+            if (window.google?.accounts?.id) {
+              (window.google.accounts.id as any).revoke(token, () => {
                 console.log("Token revoked");
               });
             }
@@ -170,10 +172,10 @@ function App() {
             console.error("Logout error:", error);
           }
         }
-
+      
         return { success: true, redirectTo: "/login" };
       },
-
+      
       check: async () => {
         const token = localStorage.getItem("token");
 

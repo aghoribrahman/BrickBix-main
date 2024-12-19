@@ -30,17 +30,24 @@ const RequirementForm = ({
   };
 
   return (
-    <Box sx={{ width: { xs: '100%', sm: '80%', md: '60%' }, mx: 'auto' }}>
-          <Typography 
-            sx={{ fontWeight: "bold", fontSize: '20px' }} 
-            variant="subtitle2" 
-            data-testid="header-user-name"
-          >
-            <span style={{ color: '#d84030' }}>{type} a </span>{' '}
-            <span style={{ color: '#11418a' }}>Requirement</span>!
-          </Typography>
-
-      <Box mt={1} borderRadius="15px" padding="20px" bgcolor="#fcfcfc">
+    <Box
+      sx={{
+        width: { xs: "100%", sm: "80%", md: "60%" },
+        mx: "auto",
+        p: 3,
+        borderRadius: 2,
+        boxShadow: 3,
+        backgroundColor: "#fff",
+      }}
+    >
+      <Typography
+        sx={{ fontWeight: "bold", fontSize: 24, mb: 2, color: "primary.main" }}
+        variant="h5"
+        textAlign="center"
+      >
+        <span style={{ color: '#d84030' }}>{type} </span>{' '} Requirement!
+      </Typography>
+      <Box component="form" mt={1} borderRadius="15px" padding="20px" bgcolor="#fcfcfc">
         <form
           style={{
             marginTop: "20px",
@@ -52,18 +59,9 @@ const RequirementForm = ({
           onSubmit={handleSubmit(onFinishHandler)}
         >
           <FormControl>
-            <FormHelperText
-              sx={{
-                fontWeight: 500,
-                margin: "10px 0",
-                fontSize: 16,
-                color: "#11142d",
-              }}
-            >
-              Enter Requirement
-            </FormHelperText>
             <TextField
               fullWidth
+              label="Enter Requirements"
               required
               id="outlined-basic"
               color="info"
@@ -73,20 +71,10 @@ const RequirementForm = ({
           </FormControl>
 
           <FormControl>
-            <FormHelperText
-              sx={{
-                fontWeight: 500,
-                margin: "10px 0",
-                fontSize: 16,
-                color: "#11142d",
-              }}
-            >
-              Enter Description & Your Contact Information
-            </FormHelperText>
             <TextareaAutosize
               minRows={5}
               required
-              placeholder="Write description"
+              placeholder="Enter description"
               color="info"
               style={{
                 width: "100%",
@@ -101,7 +89,7 @@ const RequirementForm = ({
             />
           </FormControl>
 
-          <Stack direction={{ xs: "column", sm: "row" }} gap={4}>
+          <Stack direction={{ xs: "column", sm: "row" }} gap={2}>
             <FormControl sx={{ flex: 1 }}>
               <FormHelperText
                 sx={{
@@ -147,7 +135,7 @@ const RequirementForm = ({
                 }}
               >
                 Deal Type
-              </FormHelperText>
+              </FormHelperText >
               <Select
                 variant="outlined"
                 color="info"
@@ -164,20 +152,11 @@ const RequirementForm = ({
               </Select>
             </FormControl>
 
-            <FormControl>
-              <FormHelperText
-                sx={{
-                  fontWeight: 500,
-                  margin: "10px 0",
-                  fontSize: 16,
-                  color: "#11142d",
-                }}
-              >
-                Enter Budget
-              </FormHelperText>
+            <FormControl sx={{ flex: 1 }}>
               <TextField
                 fullWidth
                 required
+                label="Enter Budget"
                 id="outlined-basic"
                 color="info"
                 type="number"
@@ -193,16 +172,6 @@ const RequirementForm = ({
           </Stack>
 
           <FormControl>
-          <FormHelperText
-            sx={{
-              fontWeight: 500,
-              margin: "10px 0",
-              fontSize: 16,
-              color: "#11142d",
-            }}
-          >
-            Enter Phone Number
-          </FormHelperText>
               <Box display="flex" alignItems="center">
                 <TextField
                   value="+91"
@@ -217,6 +186,7 @@ const RequirementForm = ({
                 <TextField
                   fullWidth
                   required
+                  label="Enter Phone Number"
                   id="outlined-basic"
                   color="info"
                   type="tel"
@@ -232,19 +202,10 @@ const RequirementForm = ({
           </FormControl>
 
           <FormControl>
-            <FormHelperText
-              sx={{
-                fontWeight: 500,
-                margin: "10px 0",
-                fontSize: 16,
-                color: "#11142d",
-              }}
-            >
-              Enter Location
-            </FormHelperText>
             <TextField
               fullWidth
               required
+              label="Enter Location"
               id="outlined-basic"
               color="info"
               variant="outlined"

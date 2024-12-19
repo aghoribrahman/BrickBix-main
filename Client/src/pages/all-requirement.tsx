@@ -82,12 +82,12 @@ const Requirement = () => {
   if (isLoading) {
     return (
       <Box sx={{ padding: 2 }}>
-        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
-        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
-        <Skeleton variant="rectangular" width="100%" height={200} /> {/* Rectangular skeleton for content */}
-        <Skeleton variant="text" width={300} height={40} /> {/* Title skeleton */}
-        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2 }} /> {/* Paragraph skeleton */}
-        <Skeleton variant="rectangular" width="100%" height={200} />
+        <Skeleton variant="text" width={300} height={40} sx={{ borderRadius: '20px' }} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2, borderRadius: '20px' }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: '20px' }} /> {/* Rectangular skeleton for content */}
+        <Skeleton variant="text" width={300} height={40} sx={{ borderRadius: '20px' }} /> {/* Title skeleton */}
+        <Skeleton variant="text" width="60%" height={30} sx={{ mb: 2, borderRadius: '20px' }} /> {/* Paragraph skeleton */}
+        <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: '20px' }} />
       </Box>
     );
   }

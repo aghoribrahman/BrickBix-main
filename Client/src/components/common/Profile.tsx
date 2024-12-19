@@ -30,8 +30,6 @@ function checkURLValue(url: string): string {
 
 const fullUrl = window.location.href
 const fullUrlValue = checkURLValue(fullUrl)
-console.log(fullUrlValue)
-
 
 const Profile = ({ type, name, avatar, email, properties, }: ProfileProps) => (
   <Box>

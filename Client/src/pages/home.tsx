@@ -60,12 +60,13 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
   const userId = user?.id || user?.userid || null; // Adjust according to the actual field
 
-  console.log(userId)
+
   useEffect(() => {
     if (userId) {
       document.title = "BrickBix"; 
@@ -84,6 +85,7 @@ const Home = () => {
           const propertiesData = await propertiesRes.json();
           const requirementsData = await requirementsRes.json();
           const userInfoData = await userInfoRes.json();
+          
           setUserInfo(userInfoData)
           setMyProperties(propertiesData.properties);
           setRequirements(requirementsData.requirements);
@@ -91,6 +93,7 @@ const Home = () => {
           setCommercialPropertiesCount(propertiesData.commercialPropertiesCount);
           setApartmentPropertiesCount(propertiesData.apartmentPropertiesCount);
           setTotalRequirementsCount(requirementsData.totalRequirementsCount);
+          setShowDialog(true)
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
@@ -154,10 +157,10 @@ const Home = () => {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1, delay: 1 }} // Adjusted delay to 3 seconds
           style={{ borderRadius: '20px' }}
         >
-          <Dialog open={!isUserInfoComplete && !formSubmitted} PaperProps={{ style: { borderRadius: '20px' } }}>
+          <Dialog open={showDialog} PaperProps={{ style: { borderRadius: '20px' } }}>
             <UserForm 
               name={user?.name} 
               email={user?.email} 
@@ -171,6 +174,7 @@ const Home = () => {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
+          transition={{ duration: 1, delay: 0.5 }} // Added delay
         >
           <Typography 
             variant="h6" 
